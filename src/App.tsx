@@ -1,3 +1,3 @@
-import RouterView from '@/routes';
-
-export default () => <RouterView />;
+export default function App() {
+    return <h1>hello world</h1>;
+}

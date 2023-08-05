@@ -1,15 +1,12 @@
-import { render } from 'solid-js/web';
-import { Router, hashIntegration } from '@solidjs/router';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import App from './App';
 
 const injected = document.querySelector('#app');
 if (injected) {
-    render(
-        () => (
-            <Router source={hashIntegration()}>
-                <App />
-            </Router>
-        ),
-        injected
+    createRoot(injected).render(
+        <StrictMode>
+            <App />
+        </StrictMode>
     );
 }

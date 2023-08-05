@@ -22,3 +22,7 @@
 ## Upgraded at August 5th, 2023 (UTC + 8)
 
 * Add favicon
+
+## Featured at August 5th, 2023 (UTC + 8)
+
+* Change settings to `React`

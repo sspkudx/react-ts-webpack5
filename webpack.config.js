@@ -1,6 +1,6 @@
-const { useConfig } = require('./webpack/webpack.base');
+const { createConfig } = require('./webpack/webpack.base');
 
-module.exports = useConfig({
+module.exports = createConfig({
     env: process.env.NODE_ENV,
-    title: 'solid-ts-webpack-starter',
+    title: 'react-ts-webpack-starter',
 }).toConfig();

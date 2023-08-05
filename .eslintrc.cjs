@@ -4,14 +4,21 @@ module.exports = {
         es2022: true,
         node: true,
     },
-    extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
+    extends: [
+        'eslint:recommended',
+        'plugin:@typescript-eslint/recommended',
+        'prettier',
+        'plugin:react/all',
+        'plugin:react/jsx-runtime',
+        'plugin:react-hooks/recommended',
+    ],
     overrides: [],
     parser: '@typescript-eslint/parser',
     parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
     },
-    plugins: ['@typescript-eslint', 'prettier'],
+    plugins: ['@typescript-eslint', 'prettier', 'react', 'react-hooks'],
     rules: {
         indent: [
             'error',
@@ -31,5 +38,13 @@ module.exports = {
             },
         ],
         '@typescript-eslint/no-var-requires': 'off',
+        'react/jsx-filename-extension': [
+            'error',
+            {
+                extensions: ['.js', '.jsx', '.tsx'],
+            },
+        ],
+        'react/jsx-no-literals': 'off',
+        'react/jsx-one-expression-per-line': [2, { allow: 'literal' }],
     },
 };

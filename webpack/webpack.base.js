@@ -17,13 +17,13 @@ const { loader: miniLoader } = MiniCssExtractPlugin;
  * @param {Record<string, unknown>} options config options
  * @returns basic webpack conf
  */
-function useConfig(
+function createConfig(
     options = {
         env: process.env.NODE_ENV,
-        title: 'solid-ts-webpack-starter',
+        title: 'react-ts-webpack-starter',
     }
 ) {
-    const { env = process.env.NODE_ENV, title = 'solid-ts-webpack-starter' } = options;
+    const { env = process.env.NODE_ENV, title = 'react-ts-webpack-starter' } = options;
     const isDev = env.toLowerCase() === 'development';
     const isProduction = env.toLowerCase() === 'production';
 
@@ -121,7 +121,7 @@ function useConfig(
                 {
                     template: path.resolve(__dirname, '../html/index.htm'),
                     inject: 'body',
-                    favicon: path.resolve(__dirname, '../html/favicon-solid.png'),
+                    favicon: path.resolve(__dirname, '../html/favicon.ico'),
                     title,
                 },
             ])
@@ -146,7 +146,7 @@ function useConfig(
                     .mode('development')
                     // set devServer
                     .devServer.compress(true)
-                    .port(8333)
+                    .port(9222)
                     .hot(true)
                     .open(false)
                     .set('liveReload', false)
@@ -219,5 +219,5 @@ function useConfig(
 }
 
 module.exports = {
-    useConfig,
+    createConfig,
 };
