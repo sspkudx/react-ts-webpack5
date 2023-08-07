@@ -8,4 +8,8 @@
 
 更具体的配置可从[Webpack配置文件](./webpack/webpack.base.js)查看。
 
+需要注意的是:
+1. 支持的`node`版本`>= 14.15`, 且最好使用`LTS`
+2. 如需要改用`pnpm`, 请删除`package-lock.json`, 并保证`node >= 16 && LTS`
+
 需要使用的时候Fork本项目即可！

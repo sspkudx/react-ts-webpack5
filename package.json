@@ -7,7 +7,7 @@
     "build": "cross-env NODE_ENV=production webpack",
     "formatter": "npx eslint ./src --fix && npx stylelint 'src/**/*{css,scss}' --fix"
   },
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.14.6",
     "@babel/plugin-proposal-class-properties": "^7.14.5",
@@ -60,6 +60,6 @@
     "react-dom": "^18.2.0"
   },
   "engines": {
-    "node": ">= 14.18.0"
+    "node": ">= 14.15.0"
   }
 }
