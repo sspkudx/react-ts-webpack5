@@ -26,3 +26,7 @@
 ## Featured at August 5th, 2023 (UTC + 8)
 
 * Change settings to `React`
+
+## Featured at August 12th, 2023 (UTC + 8)
+
+* Add `css modules` support
