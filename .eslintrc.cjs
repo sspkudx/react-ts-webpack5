@@ -45,6 +45,15 @@ module.exports = {
             },
         ],
         'react/jsx-no-literals': 'off',
-        'react/jsx-one-expression-per-line': [2, { allow: 'literal' }],
+        'react/jsx-one-expression-per-line': ['error', { allow: 'single-child' }],
+        'react-hooks/exhaustive-deps': 'off',
+        'react/jsx-no-bind': [
+            1,
+            {
+                allowArrowFunctions: true,
+                allowFunctions: true,
+                allowBind: true,
+            },
+        ],
     },
 };
