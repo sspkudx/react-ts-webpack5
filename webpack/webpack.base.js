@@ -17,13 +17,8 @@ const { loader: miniLoader } = MiniCssExtractPlugin;
  * @param {Record<string, unknown>} options config options
  * @returns basic webpack conf
  */
-function createConfig(
-    options = {
-        env: process.env.NODE_ENV,
-        title: 'react-ts-webpack-starter',
-    }
-) {
-    const { env = process.env.NODE_ENV, title = 'react-ts-webpack-starter' } = options;
+function createConfig(options = {}) {
+    const { env = process.env.NODE_ENV, title = 'react-ts-webpack-starter', lang = 'en' } = options || {};
     const isDev = env.toLowerCase() === 'development';
     const isProduction = env.toLowerCase() === 'production';
 
@@ -120,6 +115,9 @@ function createConfig(
             .use(HtmlWebpackPlugin, [
                 {
                     template: path.resolve(__dirname, '../html/index.htm'),
+                    templateParameters: {
+                        lang,
+                    },
                     inject: 'body',
                     favicon: path.resolve(__dirname, '../html/favicon.ico'),
                     title,

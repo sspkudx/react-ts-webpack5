@@ -30,3 +30,7 @@
 ## Featured at August 12th, 2023 (UTC + 8)
 
 * Add `css modules` support
+
+## Featured at August 26th, 2023 (UTC + 8)
+
+* Change HTML `lang` attribute to customisation
