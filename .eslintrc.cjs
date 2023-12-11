@@ -99,16 +99,17 @@ module.exports = {
          * 这两种方式都是可以接受的，可以根据你的需求来修改下面的规则。
          * 例如，如果团队用箭头函数定义组件比较多，你可以将规则重写为：
          * 'react/function-component-definition': [2, {
-         *      namedComponents: ['arrow-function'],
-         *      unnamedComponents: ['arrow-function'],
+         *      namedComponents: 'arrow-function',
+         *      unnamedComponents: 'arrow-function',
          * }]
          */
         'react/function-component-definition': [
             2,
             {
-                namedComponents: ['function-declaration', 'arrow-function'],
-                unnamedComponents: ['function-declaration', 'arrow-function'],
+                namedComponents: 'arrow-function',
+                unnamedComponents: 'arrow-function',
             },
         ],
+        'react/prop-types': 'off',
     },
 };
