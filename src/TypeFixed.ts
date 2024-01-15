@@ -21,15 +21,28 @@ import type { PropsWithChildren, FC } from 'react';
  *
  * ```tsx
  * import React from 'react';
- * import type { ParentComponent } from '@/TypeFixed';
+ * // import type { ReactParentComponent } from '@/TypeFixed';
+ * 
+ * // prefer
+ * import type { RFC } from '@/TypeFixed';
  *
  * interface TestComponentProps {}
  *
- * const TestComponent: ParentComponent<TestComponentProps> => ({
+ * // const TestComponent: ReactParentComponent<TestComponentProps> => ({
+ * const TestComponent: RFC<TestComponentProps> => ({
  *     // correct now
  *     children,
  * }) => { ... };
  * ```
  */
-// eslint-disable-next-line
-export type ParentComponent<T extends object = {}> = FC<PropsWithChildren<T>>;
+export type ReactParentComponent<T = unknown> = FC<PropsWithChildren<T>>;
+
+/**
+ * @description
+ * This serves as a substitute name for ReactParentComponent.
+ * RFC is an acronym for "Refactored React.FC".
+ * The preference for RFC over RPC (ReactParentComponent)
+ * is to circumvent any misunderstanding,
+ * given that RPC carries a separate implication.
+ */
+export type RFC<T = unknown> = FC<PropsWithChildren<T>>;

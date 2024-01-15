@@ -35,6 +35,6 @@
 
 * Change HTML `lang` attribute to customisation
 
-## Featured at January 16th, 2024 (UTC + 8)
+## Highlighted on January 16th, 2024 (UTC + 8)
 
-* Add type `ParentComponent` to replace old `React.FC`. See the [tutorial](./src/TypeFixed.ts)
+* Introduced the type `ReactParentComponent` (also known as `RFC`) as a replacement for the previous `React.FC`. Refer to [the guide](./src/TypeFixed.ts) for more details.
