@@ -20,7 +20,6 @@ import type { PropsWithChildren, FC } from 'react';
  * If you’re using React 18, you can replace React.FC with this type as shown below:
  *
  * ```tsx
- * import React from 'react';
  * // import type { ReactParentComponent } from '@/TypeFixed';
  * 
  * // prefer
