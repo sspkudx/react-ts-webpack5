@@ -34,3 +34,7 @@
 ## Featured at August 26th, 2023 (UTC + 8)
 
 * Change HTML `lang` attribute to customisation
+
+## Featured at January 16th, 2024 (UTC + 8)
+
+* Add type `ParentComponent` to replace old `React.FC`. See the [tutorial](./src/TypeFixed.ts)
