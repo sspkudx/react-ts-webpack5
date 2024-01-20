@@ -10,14 +10,15 @@ const { DefinePlugin } = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
-const { loader: miniLoader } = MiniCssExtractPlugin;
+const { dispachLoaderBasedOnEnv } = require('./funcs');
+const { getStyleLoaderOptionList } = require('./confs/StyleLoaderConf');
 
 /**
  * Generate a basic config
  * @param {Record<string, unknown>} options config options
  * @returns basic webpack conf
  */
-function createConfig(options = {}) {
+const createConfig = (options = {}) => {
     const { env = process.env.NODE_ENV, title = 'react-ts-webpack-starter', lang = 'en' } = options || {};
     const isDev = env.toLowerCase() === 'development';
     const isProduction = env.toLowerCase() === 'production';
@@ -60,8 +61,8 @@ function createConfig(options = {}) {
             // set styles
             .rule('css')
             .test(/\.css$/i)
-            .use(isDev ? 'style-loader' : 'mini-loader')
-            .loader(isDev ? 'style-loader' : miniLoader)
+            .use(dispachLoaderBasedOnEnv(getStyleLoaderOptionList(false)))
+            .loader(dispachLoaderBasedOnEnv(getStyleLoaderOptionList()))
             .end()
             .use('css-loader')
             .loader('css-loader')
@@ -73,8 +74,8 @@ function createConfig(options = {}) {
             // set sass
             .rule('sass')
             .test(/\.s[ac]ss$/i)
-            .use(isDev ? 'style-loader' : 'mini-loader')
-            .loader(isDev ? 'style-loader' : miniLoader)
+            .use(dispachLoaderBasedOnEnv(getStyleLoaderOptionList(false)))
+            .loader(dispachLoaderBasedOnEnv(getStyleLoaderOptionList()))
             .end()
             .use('css-loader')
             .loader('css-loader')
@@ -214,7 +215,7 @@ function createConfig(options = {}) {
                     .end();
             })
     );
-}
+};
 
 module.exports = {
     createConfig,
