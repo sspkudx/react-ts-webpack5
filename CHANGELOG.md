@@ -37,4 +37,4 @@
 
 ## Highlighted on January 16th, 2024 (UTC + 8)
 
-* Introduced the type `ReactParentComponent` (also known as `RFC`) as a replacement for the previous `React.FC`. Refer to [the guide](./src/TypeFixed.ts) for more details.
+* Introduced the type `ReactParentComponent` (also known as `RFC`) as a replacement for the previous `React.FC`. Refer to [the guide](./src/types/fixed-types.ts) for more details.

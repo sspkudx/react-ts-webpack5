@@ -20,15 +20,11 @@ import type { PropsWithChildren, FC } from 'react';
  * If you’re using React 18, you can replace React.FC with this type as shown below:
  *
  * ```tsx
- * // import type { ReactParentComponent } from '@/TypeFixed';
- * 
- * // prefer
- * import type { RFC } from '@/TypeFixed';
+ * import type { ReactParentComponent } from '@/fixed-types';
  *
  * interface TestComponentProps {}
  *
- * // const TestComponent: ReactParentComponent<TestComponentProps> => ({
- * const TestComponent: RFC<TestComponentProps> => ({
+ * const TestComponent: ReactParentComponent<TestComponentProps> => ({
  *     // correct now
  *     children,
  * }) => { ... };
@@ -43,5 +39,19 @@ export type ReactParentComponent<T = unknown> = FC<PropsWithChildren<T>>;
  * The preference for RFC over RPC (ReactParentComponent)
  * is to circumvent any misunderstanding,
  * given that RPC carries a separate implication.
+ *
+ * @tutorial
+ *
+ *```tsx
+ * // prefer
+ * import type { RFC } from '@/fixed-types';
+ *
+ * interface TestComponentProps {}
+ *
+ * const TestComponent: RFC<TestComponentProps> => ({
+ *     // correct now
+ *     children,
+ * }) => { ... };
+ * ```
  */
 export type RFC<T = unknown> = FC<PropsWithChildren<T>>;
