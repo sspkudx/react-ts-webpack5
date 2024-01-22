@@ -24,7 +24,7 @@ import type { PropsWithChildren, FC } from 'react';
  *
  * interface TestComponentProps {}
  *
- * const TestComponent: ReactParentComponent<TestComponentProps> => ({
+ * const TestComponent: ReactParentComponent<TestComponentProps> = ({
  *     // correct now
  *     children,
  * }) => { ... };
@@ -48,7 +48,7 @@ export type ReactParentComponent<T = unknown> = FC<PropsWithChildren<T>>;
  *
  * interface TestComponentProps {}
  *
- * const TestComponent: RFC<TestComponentProps> => ({
+ * const TestComponent: RFC<TestComponentProps> = ({
  *     // correct now
  *     children,
  * }) => { ... };
