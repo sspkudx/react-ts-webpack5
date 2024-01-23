@@ -1,5 +1,5 @@
-const { dispachLoaderBasedOnEnv } = require('./DispachLoader');
+const { dispatchLoaderBasedOnEnv } = require('./DispatchLoader');
 
 module.exports = {
-    dispachLoaderBasedOnEnv,
+    dispatchLoaderBasedOnEnv,
 };

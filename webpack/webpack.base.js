@@ -10,7 +10,7 @@ const { DefinePlugin } = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
-const { dispachLoaderBasedOnEnv } = require('./funcs');
+const { dispatchLoaderBasedOnEnv } = require('./funcs');
 const { getStyleLoaderOptionList } = require('./confs/StyleLoaderConf');
 
 /**
@@ -61,8 +61,8 @@ const createConfig = (options = {}) => {
             // set styles
             .rule('css')
             .test(/\.css$/i)
-            .use(dispachLoaderBasedOnEnv(getStyleLoaderOptionList(false)))
-            .loader(dispachLoaderBasedOnEnv(getStyleLoaderOptionList()))
+            .use(dispatchLoaderBasedOnEnv(getStyleLoaderOptionList(false)))
+            .loader(dispatchLoaderBasedOnEnv(getStyleLoaderOptionList()))
             .end()
             .use('css-loader')
             .loader('css-loader')
@@ -74,8 +74,8 @@ const createConfig = (options = {}) => {
             // set sass
             .rule('sass')
             .test(/\.s[ac]ss$/i)
-            .use(dispachLoaderBasedOnEnv(getStyleLoaderOptionList(false)))
-            .loader(dispachLoaderBasedOnEnv(getStyleLoaderOptionList()))
+            .use(dispatchLoaderBasedOnEnv(getStyleLoaderOptionList(false)))
+            .loader(dispatchLoaderBasedOnEnv(getStyleLoaderOptionList()))
             .end()
             .use('css-loader')
             .loader('css-loader')

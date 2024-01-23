@@ -4,7 +4,7 @@
  * @param {string} envName env name
  * @returns {string} loader of current environent
  */
-const dispachLoaderBasedOnEnv = (envLoaderOptions = [], envName = process.env.NODE_ENV) =>
+const dispatchLoaderBasedOnEnv = (envLoaderOptions = [], envName = process.env.NODE_ENV) =>
     envLoaderOptions.reduce(
         (prev, cur) => ({
             ...prev,
@@ -14,5 +14,5 @@ const dispachLoaderBasedOnEnv = (envLoaderOptions = [], envName = process.env.NO
     )[envName] ?? '';
 
 module.exports = {
-    dispachLoaderBasedOnEnv,
+    dispatchLoaderBasedOnEnv,
 };

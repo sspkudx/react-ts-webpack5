@@ -1,7 +1,7 @@
 const { loader: miniLoader } = require('mini-css-extract-plugin');
 
 /**
- * Make parameter of the function dispachLoaderBasedOnEnv for style loaders
+ * Make parameter of the function dispatchLoaderBasedOnEnv for style loaders
  * @param {boolean} isSelf is loader self or name.
  * @returns style loader dispatch params
  */
