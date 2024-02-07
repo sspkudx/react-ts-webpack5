@@ -138,7 +138,7 @@ const createConfig = (options = {}) => {
                 minSize: 15000,
             })
             .end()
-            // set in develoment mode
+            // set in development mode
             .when(isDev, configure => {
                 configure
                     .devtool('source-map')
