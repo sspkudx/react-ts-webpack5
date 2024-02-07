@@ -10,7 +10,7 @@
 
 ## 开发前必读
 
-1. `node >= 14.15`, 且最好使用`LTS`版本
+1. `node >= 16`, 且最好使用`LTS`版本
 2. 如需改用`yarn`, 请删除`package-lock.json`。不建议使用`yarn`2以上的版本
 3. 如需改用`pnpm`, 请删除`package-lock.json`, 并保证`node >= 16`
 
