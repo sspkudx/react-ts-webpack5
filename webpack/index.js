@@ -10,18 +10,25 @@ const { DefinePlugin } = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
-const { dispatchLoaderBasedOnEnv } = require('./funcs');
-const { getStyleLoaderOptionList } = require('./confs/StyleLoaderConf');
+// mini-css-extract-plugin loader
+const { loader: miniLoader } = MiniCssExtractPlugin;
 
 /**
  * Generate a basic config
  * @param {Record<string, unknown>} options config options
  * @returns basic webpack conf
  */
-const createConfig = (options = {}) => {
-    const { env = process.env.NODE_ENV, title = 'react-ts-webpack-starter', lang = 'en' } = options || {};
-    const isDev = env.toLowerCase() === 'development';
-    const isProduction = env.toLowerCase() === 'production';
+const createBasicConfig = (options = {}) => {
+    const {
+        /** HTML Title */
+        title = 'react-ts-webpack-starter',
+        /** HTML language */
+        lang = 'en',
+        /** for development conf */
+        isDev = true,
+        /** for production conf */
+        isProd = false,
+    } = options || {};
 
     return (
         new Config()
@@ -61,8 +68,8 @@ const createConfig = (options = {}) => {
             // set styles
             .rule('css')
             .test(/\.css$/i)
-            .use(dispatchLoaderBasedOnEnv(getStyleLoaderOptionList(false)))
-            .loader(dispatchLoaderBasedOnEnv(getStyleLoaderOptionList()))
+            .use('style-loader')
+            .loader(isDev ? 'style-loader' : miniLoader)
             .end()
             .use('css-loader')
             .loader('css-loader')
@@ -74,8 +81,8 @@ const createConfig = (options = {}) => {
             // set sass
             .rule('sass')
             .test(/\.s[ac]ss$/i)
-            .use(dispatchLoaderBasedOnEnv(getStyleLoaderOptionList(false)))
-            .loader(dispatchLoaderBasedOnEnv(getStyleLoaderOptionList()))
+            .use('style-loader')
+            .loader(isDev ? 'style-loader' : miniLoader)
             .end()
             .use('css-loader')
             .loader('css-loader')
@@ -128,7 +135,8 @@ const createConfig = (options = {}) => {
             .plugin('DefinePlugin')
             .use(DefinePlugin, [
                 {
-                    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+                    isDev,
+                    isProd,
                 },
             ])
             .end()
@@ -169,7 +177,7 @@ const createConfig = (options = {}) => {
                     .end();
             })
             // set in production mode
-            .when(isProduction, configure => {
+            .when(isProd, configure => {
                 configure
                     .devtool('eval')
                     .mode('production')
@@ -218,5 +226,5 @@ const createConfig = (options = {}) => {
 };
 
 module.exports = {
-    createConfig,
+    createBasicConfig,
 };

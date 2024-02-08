@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "Really basic React webpack build with TS",
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack serve",
-    "build": "cross-env NODE_ENV=production webpack",
+    "start": "cross-env webpack serve --env=dev --mode=development",
+    "build": "cross-env webpack --env=prod --mode=production",
     "formatter": "npx eslint ./src --fix && npx stylelint 'src/**/*{css,scss}' --fix"
   },
   "license": "MIT",
