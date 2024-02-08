@@ -14,30 +14,48 @@
 2. 如需改用`yarn`, 请删除`package-lock.json`。不建议使用`yarn`2以上的版本
 3. 如需改用`pnpm`, 请删除`package-lock.json`, 并保证`node >= 16`
 
+## 安装项目
+
+```sh
+# npx
+npx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
+
+# yarn
+yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git react-tester
+
+# pnpm
+pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git react-tester
+```
+
 ## 开发注意
 
 ### 自定义配置
 
-**不建议**直接修改[基础Webpack配置](./webpack/webpack.base.js), 建议在最外层的[Webpack配置文件](./webpack.config.js)修改, 使用[Webpack Chain](https://github.com/neutrinojs/webpack-chain)语法。
+**不建议**直接修改[基础Webpack配置](./webpack/index.js), 建议在最外层的[Webpack配置文件](./webpack.config.js)修改, 使用[Webpack Chain](https://github.com/neutrinojs/webpack-chain/tree/v6.5.1)语法。
 
 示例：
 
 ```javascript
-const { createConfig } = require('./webpack/webpack.base');
-const YourPlugin = require('your-plugin');
+const { createBasicConfig } = require('./webpack');
 
-const conf = createConfig({
-    env: process.env.NODE_ENV,
-    title: 'react-ts-webpack-starter',
-    lang: 'zh-CN',
-});
+module.exports = (env, argv) => {
+    const { dev, prod } = env;
+    const { mode } = argv;
 
-// 你的配置
-conf.plugin('Your Plugin').use(YourPlugin, [{
-    // Plugin配置
-}]).end();
+    return createBasicConfig({
+        title: 'react-ts-webpack-starter',
+        lang: 'zh-CN',
+        isDev: Boolean(dev) && Boolean(mode === 'development'),
+        isProd: Boolean(prod) && Boolean(mode === 'production'),
+    })
+    // 例: 你的配置写在下方
+    .plugin('YourPlugin').use(YourPlugin, [{
+        // Plugin配置
+        }]).end()
+        // 以.toConfig结尾不要忘记
+        .toConfig();
+};
 
-module.exports = conf.toConfig();
 ```
 
 ### `React.FC` 修正
@@ -101,7 +119,7 @@ export default ParentComponent;
 示例：
 
 ```tsx
-import type { ReactParentComponent } from '@/fixed-types';
+import type { ReactParentComponent } from '@/types/fixed-types';
 
 interface TestComponentProps {}
 
@@ -111,10 +129,10 @@ const TestComponent: ReactParentComponent<TestComponentProps> = ({
 }) => { ... };
 ```
 
-建议多用下面的简写形式：
+更建议用下面的简写形式：
 
 ```tsx
-import type { RFC } from '@/fixed-types';
+import type { RFC } from '@/types/fixed-types';
 
 interface TestComponentProps {}
 
