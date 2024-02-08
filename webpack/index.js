@@ -80,18 +80,55 @@ const createBasicConfig = (options = {}) => {
             .end()
             // set sass
             .rule('sass')
-            .test(/\.s[ac]ss$/i)
+            .test(/\.sass$/i)
             .use('style-loader')
             .loader(isDev ? 'style-loader' : miniLoader)
             .end()
             .use('css-loader')
             .loader('css-loader')
+            .options({
+                sourceMap: false,
+            })
             .end()
             .use('postcss-loader')
             .loader('postcss-loader')
+            .options({
+                sourceMap: false,
+            })
             .end()
             .use('sass-loader')
             .loader('sass-loader')
+            .options({
+                sourceMap: false,
+                sassOptions: {
+                    indentedSyntax: true,
+                },
+            })
+            .end()
+            .end()
+            // set scss
+            .rule('scss')
+            .test(/\.scss$/i)
+            .use('style-loader')
+            .loader(isDev ? 'style-loader' : miniLoader)
+            .end()
+            .use('css-loader')
+            .loader('css-loader')
+            .options({
+                sourceMap: false,
+            })
+            .end()
+            .use('postcss-loader')
+            .loader('postcss-loader')
+            .options({
+                sourceMap: false,
+            })
+            .end()
+            .use('sass-loader')
+            .loader('sass-loader')
+            .options({
+                sourceMap: false,
+            })
             .end()
             .use('style-resource')
             .loader('style-resources-loader')
