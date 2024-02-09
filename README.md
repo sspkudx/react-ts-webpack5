@@ -10,6 +10,8 @@ This is a very basic starter kit. It includes a minimal TypeScript setup with we
 
 ## Install Project
 
+### Clone This Project as Yours
+
 ```sh
 # npx
 npx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
@@ -19,6 +21,19 @@ yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git react-tester
 
 # pnpm
 pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git react-tester
+```
+
+### Install Dependencies
+
+```sh
+# npm
+npm i
+
+# yarn
+yarn
+
+# pnpm
+pnpm i
 ```
 
 ## References

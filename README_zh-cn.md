@@ -16,6 +16,8 @@
 
 ## 安装项目
 
+### 复制项目模板
+
 ```sh
 # npx
 npx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
@@ -27,7 +29,20 @@ yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git react-tester
 pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git react-tester
 ```
 
-## 开发注意
+### 安装依赖
+
+```sh
+# npm
+npm i
+
+# yarn
+yarn
+
+# pnpm
+pnpm i
+```
+
+## 开发注意事项
 
 ### 自定义配置
 
