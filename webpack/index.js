@@ -57,10 +57,7 @@ const createBasicConfig = (options = {}) => {
             .test(/\.[jt]sx?$/i)
             .use('babel')
             .loader('babel-loader')
-            .options({
-                babelrc: false,
-                configFile: path.resolve(__dirname, '../babel.config.cjs'),
-            })
+            .options({ babelrc: true })
             .end()
             .exclude.add(/node_modules/)
             .end()
@@ -73,6 +70,13 @@ const createBasicConfig = (options = {}) => {
             .end()
             .use('css-loader')
             .loader('css-loader')
+            .options({
+                sourceMap: false,
+                // css-module hash
+                modules: {
+                    localIdentName: '[local]__[hash:base64]',
+                },
+            })
             .end()
             .use('postcss-loader')
             .loader('postcss-loader')
@@ -88,6 +92,10 @@ const createBasicConfig = (options = {}) => {
             .loader('css-loader')
             .options({
                 sourceMap: false,
+                // css-module hash
+                modules: {
+                    localIdentName: '[local]__[hash:base64]',
+                },
             })
             .end()
             .use('postcss-loader')
@@ -116,6 +124,10 @@ const createBasicConfig = (options = {}) => {
             .loader('css-loader')
             .options({
                 sourceMap: false,
+                // css-module hash
+                modules: {
+                    localIdentName: '[local]__[hash:base64]',
+                },
             })
             .end()
             .use('postcss-loader')
@@ -237,16 +249,12 @@ const createBasicConfig = (options = {}) => {
                     // html webpack plugin
                     .end()
                     .plugin('HtmlWebpackPlugin')
-                    .tap(args => {
-                        const [htmlPluginConf] = args;
-
-                        return [
-                            {
-                                ...htmlPluginConf,
-                                minify: true,
-                            },
-                        ];
-                    })
+                    .tap(args => [
+                        ...args,
+                        {
+                            minify: true,
+                        },
+                    ])
                     .end()
                     .plugin('MiniCssExtractPlugin')
                     .use(MiniCssExtractPlugin, [
