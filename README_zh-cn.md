@@ -51,22 +51,22 @@ pnpm i
 示例：
 
 ```javascript
-const { createBasicConfig } = require('./webpack');
-
-module.exports = (env, argv) => {
+module.exports = env => {
+    // use env and process.env
     const { dev, prod } = env;
-    const { mode } = argv;
+    const { NODE_ENV = 'development' } = process.env;
 
     return createBasicConfig({
         title: 'react-ts-webpack-starter',
         lang: 'zh-CN',
-        isDev: Boolean(dev) && Boolean(mode === 'development'),
-        isProd: Boolean(prod) && Boolean(mode === 'production'),
+        isDev: Boolean(dev) && Boolean(NODE_ENV === 'development'),
+        isProd: Boolean(prod) && Boolean(NODE_ENV === 'production'),
     })
-    // 例: 你的配置写在下方
-    .plugin('YourPlugin').use(YourPlugin, [{
-        // Plugin配置
-        }]).end()
+        // 例: 你的配置写在下方
+        .plugin('YourPlugin').use(YourPlugin, [{
+            // Plugin配置
+        }])
+        .end()
         // 以.toConfig结尾不要忘记
         .toConfig();
 };
