@@ -1,5 +1,7 @@
 const path = require('path');
 const Config = require('webpack-chain');
+const compose = require('compose-function');
+const { loadStyles } = require('./modules/LoadStyles.js');
 
 // plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -9,9 +11,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { DefinePlugin } = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
-
-// mini-css-extract-plugin loader
-const { loader: miniLoader } = MiniCssExtractPlugin;
 
 /**
  * Generate a basic config
@@ -30,7 +29,35 @@ const createBasicConfig = (options = {}) => {
         isProd = false,
     } = options || {};
 
-    return (
+    const configLoadStyle = compose(
+        /** @param {Config} conf config */
+        conf =>
+            loadStyles(conf, {
+                isDev,
+                styleType: 'sass',
+            }),
+
+        /** @param {Config} conf config */
+        conf =>
+            loadStyles(conf, {
+                isDev,
+                styleType: 'scss',
+                styleResourcePatterns: [
+                    // use scss
+                    path.resolve(__dirname, '../src/assets/scss/_globals.scss'),
+                ],
+            }),
+
+        /** @param {Config} conf config */
+        conf =>
+            loadStyles(conf, {
+                isDev,
+                styleType: 'css',
+                isCssModules: false,
+            })
+    );
+
+    return configLoadStyle(
         new Config()
             // set entry
             .entry('index')
@@ -60,96 +87,6 @@ const createBasicConfig = (options = {}) => {
             .options({ babelrc: true })
             .end()
             .exclude.add(/node_modules/)
-            .end()
-            .end()
-            // set styles
-            .rule('css')
-            .test(/\.css$/i)
-            .use('style-loader')
-            .loader(isDev ? 'style-loader' : miniLoader)
-            .end()
-            .use('css-loader')
-            .loader('css-loader')
-            .options({
-                sourceMap: false,
-                // css-module hash
-                modules: {
-                    localIdentName: '[local]__[hash:base64]',
-                },
-            })
-            .end()
-            .use('postcss-loader')
-            .loader('postcss-loader')
-            .end()
-            .end()
-            // set sass
-            .rule('sass')
-            .test(/\.sass$/i)
-            .use('style-loader')
-            .loader(isDev ? 'style-loader' : miniLoader)
-            .end()
-            .use('css-loader')
-            .loader('css-loader')
-            .options({
-                sourceMap: false,
-                // css-module hash
-                modules: {
-                    localIdentName: '[local]__[hash:base64]',
-                },
-            })
-            .end()
-            .use('postcss-loader')
-            .loader('postcss-loader')
-            .options({
-                sourceMap: false,
-            })
-            .end()
-            .use('sass-loader')
-            .loader('sass-loader')
-            .options({
-                sourceMap: false,
-                sassOptions: {
-                    indentedSyntax: true,
-                },
-            })
-            .end()
-            .end()
-            // set scss
-            .rule('scss')
-            .test(/\.scss$/i)
-            .use('style-loader')
-            .loader(isDev ? 'style-loader' : miniLoader)
-            .end()
-            .use('css-loader')
-            .loader('css-loader')
-            .options({
-                sourceMap: false,
-                // css-module hash
-                modules: {
-                    localIdentName: '[local]__[hash:base64]',
-                },
-            })
-            .end()
-            .use('postcss-loader')
-            .loader('postcss-loader')
-            .options({
-                sourceMap: false,
-            })
-            .end()
-            .use('sass-loader')
-            .loader('sass-loader')
-            .options({
-                sourceMap: false,
-            })
-            .end()
-            .use('style-resource')
-            .loader('style-resources-loader')
-            .options({
-                patterns: [
-                    // use scss
-                    path.resolve(__dirname, '../src/assets/scss/_globals.scss'),
-                ],
-            })
             .end()
             .end()
             // add pics
