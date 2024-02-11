@@ -8,7 +8,7 @@ module.exports = env => {
     return createBasicConfig({
         title: 'react-ts-webpack-starter',
         lang: 'zh-CN',
-        isDev: Boolean(dev) && Boolean(NODE_ENV === 'development'),
-        isProd: Boolean(prod) && Boolean(NODE_ENV === 'production'),
+        isDev: !!dev && NODE_ENV === 'development',
+        isProd: !!prod && NODE_ENV === 'production',
     }).toConfig();
 };
