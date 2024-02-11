@@ -2,12 +2,9 @@
  * @description config style loads
  * @param {import('webpack-chain')} confInstance
  * @param {import('./LoadStyles_types').OtherConf} otherConf
- * @returns the config
+ * @returns the config instance
  */
-const loadStyles = (
-    confInstance,
-    { isDev = true, styleType = 'css', styleResourcePatterns = [], isCssModules = true }
-) => {
+const loadStyles = (confInstance, { isDev = true, styleType = 'css', styleResourcePatterns = [] }) => {
     const { loader: miniLoader } = require('mini-css-extract-plugin');
     const sourceMap = !isDev;
 

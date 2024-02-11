@@ -53,7 +53,6 @@ const createBasicConfig = (options = {}) => {
             loadStyles(conf, {
                 isDev,
                 styleType: 'css',
-                isCssModules: false,
             })
     );
 
