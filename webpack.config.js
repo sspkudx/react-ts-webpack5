@@ -1,8 +1,13 @@
 const { createBasicConfig } = require('./webpack');
 
-module.exports = env => {
+/**
+ * @description Export a Config Function. See: https://webpack.js.org/configuration/configuration-types/#exporting-a-function
+ * @param {Record<string, unknown>} environments environments
+ * @returns a webpack config
+ */
+module.exports = environments => {
     // use env and process.env
-    const { dev, prod } = env;
+    const { dev, prod } = environments;
     const { NODE_ENV = 'development' } = process.env;
 
     return createBasicConfig({
