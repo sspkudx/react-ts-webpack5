@@ -1,42 +1,162 @@
-# React TS Webpack Starter
+# Development Documentation
 
-This project is forked from [`solid-ts-webpack5`](https://github.com/Allen-Bayern/solid-ts-webpack5), with all settings adjusted for React.
+This is an ultra-lightweight template for a `React` + `webpack` project that you can use out of the box.
 
-This is a very basic starter kit. It includes a minimal TypeScript setup with webpack and webpack dev server. The CSS preprocessor `sass` and its loader, along with some useful loaders and plugins, have been added. This repository is an ideal starting point if you plan to build your own webpack configuration.
+Pre-installed configurations include:
 
-[Navigate to the configuration file here](./webpack.config.js)
+- `react @^18.2.0`
+- `sass`
+- `TypeScript @^5.0.0`
 
-[中文文档 (并非逐字逐句翻译)](./README_zh-cn.md)
+## Translations
 
-## Install Project
+- [中文文档](./docs/README_zh-cn.md)
 
-### Clone This Project as Yours
+## Pre-Development Considerations
+
+1. Ensure that you have `node >= 16` installed, preferably using the **LTS** version.
+2. If you prefer to use `yarn`, delete the `package-lock.json` file. Note that using `yarn` versions 2 and above is not recommended.
+3. If you prefer to use `pnpm`, delete the `package-lock.json` file and make sure your `node >= 16`.
+
+## Project Installation
+
+### Clone the Project Template
 
 ```sh
-# npx
+# Using npx
 npx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
 
-# yarn
-yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git react-tester
+# Using yarn
+yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
 
-# pnpm
-pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git react-tester
+# Using pnpm
+pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
 ```
 
 ### Install Dependencies
 
 ```sh
-# npm
-npm i
+# Using npm
+npm install
 
-# yarn
+# Using yarn
 yarn
 
-# pnpm
-pnpm i
+# Using pnpm
+pnpm up # For initial installation
+pnpm install # For reinstallation
 ```
 
-## References
+## Development Considerations
 
-* [Changelog](./CHANGELOG.md)
-* [Webpack Configuration](./webpack/webpack.base.js)
+### Custom Configuration
+
+**Avoid** directly modifying the [basic Webpack configuration](./webpack/index.js). Instead, it's recommended to modify the [Webpack configuration file](./webpack.config.js) at the top level using the [Webpack Chain](https://github.com/neutrinojs/webpack-chain/tree/v6.5.1) syntax.
+
+Example:
+
+```javascript
+module.exports = env => {
+    // Use env and process.env
+    const { dev, prod } = env;
+    const { NODE_ENV = 'development' } = process.env;
+
+    return createBasicConfig({
+        title: 'react-ts-webpack-starter',
+        lang: 'zh-CN',
+        isDev: Boolean(dev) && NODE_ENV === 'development',
+        isProd: Boolean(prod) && NODE_ENV === 'production',
+    })
+        // Example: Add your custom configuration below
+        .plugin('YourPlugin').use(YourPlugin, [{
+            // Plugin configuration
+        }])
+        .end()
+        // Don't forget to end with .toConfig()
+        .toConfig();
+};
+```
+
+### Fixing `React.FC`
+
+In `React 18`, the `React.FC` type has been rewritten, causing issues with destructuring `children`. There are two ways to address this:
+
+#### Method 1: Manually Import `PropsWithChildren` Type When Needed
+
+Although the official recommendation is for developers to define components using the `function` keyword, many developers still prefer using `React.FC`. However, even when using `React.FC` to represent components, you still need to manually import the `PropsWithChildren` type in `React 18`.
+
+The official recommendation is to define components like this when they have `children`:
+
+```tsx
+import { PropsWithChildren } from 'react';
+
+interface IProps {
+    value: string;
+}
+
+function ParentComponent(props: PropsWithChildren<IProps>) {
+    const { value, children } = props;
+    return (
+        <div>
+            <p>{value}</p>
+            {children}
+        </div>
+    );
+}
+
+export default ParentComponent;
+```
+
+However, the common practice is as follows:
+
+```tsx
+// Import { PropsWithChildren } when needed for 'children'
+import React, { PropsWithChildren } from 'react';
+
+interface IProps {
+    value: string;
+}
+
+const ParentComponent: React.FC<PropsWithChildren<IProps>> = props => {
+    const { value, children } = props;
+    
+    return (
+        <div>
+            <p>{value}</p>
+            {children}
+        </div>
+    );
+}
+
+export default ParentComponent;
+```
+
+#### Method 2 (Recommended): Use the Encapsulated `ReactParentComponent` Type (or `RFC`)
+
+This method is essentially a wrapper around Method 1, so you can use it directly.
+
+Example:
+
+```tsx
+import type { ReactParentComponent } from '@/types/fixed-types';
+
+interface TestComponentProps {}
+
+const TestComponent: ReactParentComponent<TestComponentProps> = ({
+    // Correct now
+    children,
+}) => { ... };
+```
+
+Even better, you can use the following shorthand form:
+
+```tsx
+import type { RFC } from '@/types/fixed-types';
+
+interface TestComponentProps {}
+
+const TestComponent: RFC<TestComponentProps> = ({
+    // Correct now
+    children,
+}) => { ... };
+```

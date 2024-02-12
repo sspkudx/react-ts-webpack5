@@ -23,10 +23,10 @@
 npx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
 
 # yarn
-yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git react-tester
+yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
 
 # pnpm
-pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git react-tester
+pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
 ```
 
 ### 安装依赖
@@ -39,7 +39,8 @@ npm i
 yarn
 
 # pnpm
-pnpm i
+pnpm up # 首次安装
+pnpm i # 重装
 ```
 
 ## 开发注意事项
@@ -59,8 +60,8 @@ module.exports = env => {
     return createBasicConfig({
         title: 'react-ts-webpack-starter',
         lang: 'zh-CN',
-        isDev: Boolean(dev) && Boolean(NODE_ENV === 'development'),
-        isProd: Boolean(prod) && Boolean(NODE_ENV === 'production'),
+        isDev: Boolean(dev) && NODE_ENV === 'development',
+        isProd: Boolean(prod) && NODE_ENV === 'production',
     })
         // 例: 你的配置写在下方
         .plugin('YourPlugin').use(YourPlugin, [{
