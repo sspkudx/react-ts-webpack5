@@ -1,40 +1,46 @@
-# Change Log
+# CHANGELOG
 
-## Upgraded at April 6th, 2023 (UTC + 8)
+## Upgraded on April 6th, 2023 (UTC + 8)
 
-* Upgrade the webpack version from 4 to 5;
-* Add loaders of style, include `style-loader`, `css-loader`, `postcss-loader` and `sass-loader`;
-* Split the config for variant environments. You can find `webpack.common.js`, `webpack.dev.js` and `webpack.prod.js` from the folder `./conf`. You can just modify them.
+* Upgraded the webpack version from 4 to 5.
+* Added style loaders, including `style-loader`, `css-loader`, `postcss-loader`, and `sass-loader`.
+* Split the configuration for different environments. You can find `webpack.common.js`, `webpack.dev.js`, and `webpack.prod.js` in the `./conf` folder. Feel free to modify them.
 
-## Upgraded at April 20th, 2023 (UTC + 8)
+## Upgraded on April 20th, 2023 (UTC + 8)
 
-* Use `webpack-chain` to rewrite the `webpack.config.js`;
-* Install `@solidjs/router`;
+* Utilized `webpack-chain` to rewrite the `webpack.config.js`.
+* Installed `@solidjs/router`.
 
-## Upgraded (I have forgot the time ...)
+## Upgraded on May 30th, 2023 (UTC + 8)
 
-* add `eslint`, `stylelint`, `prettier` and gave really basic configs
+* Added ESLint, Stylelint, and Prettier configurations with basic settings.
 
-## Upgraded at June 30th, 2023 (UTC + 8)
+## Upgraded on June 30th, 2023 (UTC + 8)
 
-* Add `stylelint` config to `.vscode/settings.json`
+* Included a `stylelint` configuration in `.vscode/settings.json`.
 
-## Upgraded at August 5th, 2023 (UTC + 8)
+## Upgraded on August 5th, 2023 (UTC + 8)
 
-* Add favicon
+* Added a favicon.
 
-## Featured at August 5th, 2023 (UTC + 8)
+## Featured on August 5th, 2023 (UTC + 8)
 
-* Change settings to `React`
+* Adjusted settings for `React`.
 
-## Featured at August 12th, 2023 (UTC + 8)
+## Featured on August 12th, 2023 (UTC + 8)
 
-* Add `css modules` support
+* Added support for `CSS modules`.
 
-## Featured at August 26th, 2023 (UTC + 8)
+## Featured on August 26th, 2023 (UTC + 8)
 
-* Change HTML `lang` attribute to customisation
+* Customized the HTML `lang` attribute.
 
-## Highlighted on January 16th, 2024 (UTC + 8)
+## Featured on January 16th, 2024 (UTC + 8)
 
-* Introduced the type `ReactParentComponent` (also known as `RFC`) as a replacement for the previous `React.FC`. Refer to [the guide](./src/types/fixed-types.ts) for more details.
+* Introduced the `ReactParentComponent` type (also known as `RFC`) as a replacement for the previous `React.FC`. Refer to [the guide](./src/types/fixed-types.ts) for more details.
+
+## Featured on February 12, 2024 (UTC + 8)
+
+* Changed the `module.exports` in `webpack.config.js` to a functional approach.
+* Fixed the issue preventing simultaneous support for regular `css` and `css modules`.
+* Rewrote the documentation in both Chinese and English.
