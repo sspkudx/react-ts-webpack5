@@ -58,6 +58,8 @@ const createBasicConfig = (options = {}) => {
 
     return configLoadStyle(
         new Config()
+            // set context
+            .context(path.resolve(__dirname, '../'))
             // set entry
             .entry('index')
             .add(path.resolve(__dirname, '../src/index.tsx'))
@@ -213,7 +215,7 @@ const createBasicConfig = (options = {}) => {
                     .plugin('MiniCssExtractPlugin')
                     .use(MiniCssExtractPlugin, [
                         {
-                            filename: '[name]-[contenthash].css',
+                            filename: 'style/[name]-[contenthash].css',
                         },
                     ])
                     .end()
