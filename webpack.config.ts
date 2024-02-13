@@ -1,11 +1,12 @@
-const { createBasicConfig } = require('./webpack');
+import { Configuration } from 'webpack';
+import { createBasicConfig } from './webpack';
 
 /**
  * @description Export a Config Function. See: https://webpack.js.org/configuration/configuration-types/#exporting-a-function
- * @param {Record<string, unknown>} environments environments
+ * @param  environments environments, like dev, prod ...
  * @returns a webpack config
  */
-module.exports = environments => {
+const webpackConfigCallback = (environments: Record<string, boolean>): Configuration => {
     // use env and process.env
     const { dev, prod } = environments;
     const { NODE_ENV = 'development' } = process.env;
@@ -17,3 +18,5 @@ module.exports = environments => {
         isProd: !!prod && NODE_ENV === 'production',
     }).toConfig();
 };
+
+export default webpackConfigCallback;

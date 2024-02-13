@@ -1,24 +1,32 @@
-const path = require('path');
-const Config = require('webpack-chain');
-const compose = require('compose-function');
-const { loadStyles } = require('./modules/LoadStyles.js');
+import { resolve as pathResolve } from 'path';
+import Config from 'webpack-chain';
+import compose from 'compose-function';
+import { loadStyles } from './modules/LoadStyles';
 
 // plugins
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { DefinePlugin } = require('webpack');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+import { DefinePlugin } from 'webpack';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import ESLintPlugin from 'eslint-webpack-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+
+type SelfDefineOptions = Partial<{
+    title: string;
+    lang: string;
+    isDev: boolean;
+    isProd: boolean;
+}>;
+
+const withBasePath = (suffix = '') => pathResolve(pathResolve(__dirname, `../${suffix}`));
 
 /**
  * Generate a basic config
- * @param {Record<string, unknown>} options config options
+ * @param options config options
  * @returns basic webpack conf
  */
-const createBasicConfig = (options = {}) => {
+export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
     const {
         /** HTML Title */
         title = 'react-ts-webpack-starter',
@@ -31,26 +39,23 @@ const createBasicConfig = (options = {}) => {
     } = options || {};
 
     const configLoadStyle = compose(
-        /** @param {Config} conf config */
-        conf =>
+        (conf: Config) =>
             loadStyles(conf, {
                 isDev,
                 styleType: 'sass',
             }),
 
-        /** @param {Config} conf config */
-        conf =>
+        (conf: Config) =>
             loadStyles(conf, {
                 isDev,
                 styleType: 'scss',
                 styleResourcePatterns: [
                     // use scss
-                    path.resolve(__dirname, '../src/assets/scss/_globals.scss'),
+                    withBasePath('/src/assets/scss/_globals.scss'),
                 ],
             }),
 
-        /** @param {Config} conf config */
-        conf =>
+        (conf: Config) =>
             loadStyles(conf, {
                 isDev,
                 styleType: 'css',
@@ -60,20 +65,25 @@ const createBasicConfig = (options = {}) => {
     return configLoadStyle(
         new Config()
             // set context
-            .context(path.resolve(__dirname, '../'))
+            .context(withBasePath())
             // set entry
             .entry('index')
-            .add(path.resolve(__dirname, '../src/index.tsx'))
+            .add(withBasePath('src/index.tsx'))
             .end()
             // output
-            .output.path(path.resolve(__dirname, '../dist'))
+            .output.path(withBasePath('dist'))
             .hashFunction('xxhash64')
-            .publicPath(path.resolve(__dirname, '../'))
             .filename('js/[name].[contenthash].bundle.js')
             .chunkFilename('js/[name].[contenthash].js')
+            /**
+             * @feature
+             * Set output.clean to replace CleanWebpackPlugin.
+             * See: https://webpack.js.org/configuration/output/#outputclean
+             */
+            .set('clean', true)
             .end()
             // set alias
-            .resolve.alias.set('@', path.resolve(__dirname, '../src'))
+            .resolve.alias.set('@', withBasePath('src'))
             .end()
             .extensions.add('.js')
             .add('.jsx')
@@ -96,7 +106,7 @@ const createBasicConfig = (options = {}) => {
             // add pics
             .rule('pics')
             .test(/\.(png|svg|jpe?g|gif)$/i)
-            .type('asset/resource')
+            .set('type', 'asset/resource')
             .parser({
                 dataUrlCondition: {
                     maxSize: 10 * 1024,
@@ -105,24 +115,25 @@ const createBasicConfig = (options = {}) => {
             .end()
             .rule('fonts')
             .test(/\.(woff2?|eot|[ot]tf)$/i)
-            .type('asset/resource')
+            .set('type', 'asset/resource')
             .end()
             .end()
             // set plugins
             .plugin('HtmlWebpackPlugin')
             .use(HtmlWebpackPlugin, [
                 {
-                    template: path.resolve(__dirname, '../html/index.htm'),
+                    template: withBasePath('html/index.htm'),
                     templateParameters: {
                         lang,
                     },
                     inject: 'body',
-                    favicon: path.resolve(__dirname, '../html/favicon.ico'),
+                    favicon: withBasePath('html/favicon.ico'),
                     title,
                 },
             ])
             .end()
             .plugin('DefinePlugin')
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .use(DefinePlugin, [
                 {
                     isDev,
@@ -146,7 +157,6 @@ const createBasicConfig = (options = {}) => {
                     .port(9222)
                     .hot(true)
                     .open(false)
-                    .set('liveReload', false)
                     .end()
                     // check ts in dev environment
                     .plugin('ForkTsCheckerWebpackPlugin')
@@ -183,7 +193,8 @@ const createBasicConfig = (options = {}) => {
                                     drop_console: true,
                                     drop_debugger: true,
                                 },
-                            },
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            } as any,
                         },
                     ])
                     .end()
@@ -224,14 +235,7 @@ const createBasicConfig = (options = {}) => {
                             filename: 'style/[name]-[contenthash].css',
                         },
                     ])
-                    .end()
-                    .plugin('CleanWebpackPlugin')
-                    .use(CleanWebpackPlugin)
                     .end();
             })
     );
-};
-
-module.exports = {
-    createBasicConfig,
 };

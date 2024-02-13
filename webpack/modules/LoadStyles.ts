@@ -1,10 +1,21 @@
+import Config from 'webpack-chain';
+
+interface OtherConf {
+    isDev: boolean;
+    styleType: 'sass' | 'scss' | 'less' | 'stylus' | 'css';
+    styleResourcePatterns?: string[];
+}
+
 /**
  * @description config style loads
- * @param {import('webpack-chain')} confInstance
- * @param {import('./LoadStyles_types').OtherConf} otherConf
+ * @param confInstance
+ * @param  otherConf
  * @returns the config instance
  */
-const loadStyles = (confInstance, { isDev = true, styleType = 'css', styleResourcePatterns = [] }) => {
+export const loadStyles = (
+    confInstance: Config,
+    { isDev = true, styleType = 'css', styleResourcePatterns = [] }: OtherConf
+): Config => {
     const { loader: miniLoader } = require('mini-css-extract-plugin');
     const sourceMap = !isDev;
 
@@ -24,7 +35,7 @@ const loadStyles = (confInstance, { isDev = true, styleType = 'css', styleResour
                 importLoaders: 2,
                 // css-module hash
                 modules: {
-                    auto: resourcePath => resourcePath.endsWith('.sass'),
+                    auto: (resourcePath: string) => resourcePath.endsWith('.sass'),
                     localIdentName: '[local]__[hash:base64]',
                 },
             })
@@ -102,7 +113,7 @@ const loadStyles = (confInstance, { isDev = true, styleType = 'css', styleResour
                 importLoaders: 2,
                 // css-module hash
                 modules: {
-                    auto: resourcePath => resourcePath.endsWith('.scss'),
+                    auto: (resourcePath: string) => resourcePath.endsWith('.scss'),
                     localIdentName: '[local]__[hash:base64]',
                 },
             })
@@ -170,7 +181,7 @@ const loadStyles = (confInstance, { isDev = true, styleType = 'css', styleResour
                 importLoaders: 2,
                 // css-module hash
                 modules: {
-                    auto: resourcePath => resourcePath.endsWith('.less'),
+                    auto: (resourcePath: string) => resourcePath.endsWith('.less'),
                     localIdentName: '[local]__[hash:base64]',
                 },
             })
@@ -238,7 +249,7 @@ const loadStyles = (confInstance, { isDev = true, styleType = 'css', styleResour
                 importLoaders: 2,
                 // css-module hash
                 modules: {
-                    auto: resourcePath => resourcePath.endsWith('.styl') || resourcePath.endsWith('.stylus'),
+                    auto: (resourcePath: string) => resourcePath.endsWith('.styl') || resourcePath.endsWith('.stylus'),
                     localIdentName: '[local]__[hash:base64]',
                 },
             })
@@ -305,7 +316,7 @@ const loadStyles = (confInstance, { isDev = true, styleType = 'css', styleResour
             importLoaders: 1,
             // css-module hash
             modules: {
-                auto: resourcePath => resourcePath.endsWith('.css'),
+                auto: (resourcePath: string) => resourcePath.endsWith('.css'),
                 localIdentName: '[local]__[hash:base64]',
             },
         })
@@ -347,8 +358,4 @@ const loadStyles = (confInstance, { isDev = true, styleType = 'css', styleResour
         .end()
         .end()
         .end();
-};
-
-module.exports = {
-    loadStyles,
 };
