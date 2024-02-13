@@ -44,3 +44,8 @@
 * Changed the `module.exports` in `webpack.config.js` to a functional approach.
 * Fixed the issue preventing simultaneous support for regular `css` and `css modules`.
 * Rewrote the documentation in both Chinese and English.
+
+## Featured on February 14, 2024 (UTC + 8)
+
+* Change config file from `js` to `ts`.
+* Remove `clean-webpack-plugin`. Use `output.clean` instead.
