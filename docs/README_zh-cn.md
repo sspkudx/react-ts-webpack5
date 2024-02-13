@@ -47,12 +47,15 @@ pnpm i # 重装
 
 ### 自定义配置
 
-**不建议**直接修改[基础Webpack配置](./webpack/index.js), 建议在最外层的[Webpack配置文件](./webpack.config.js)修改, 使用[Webpack Chain](https://github.com/neutrinojs/webpack-chain/tree/v6.5.1)语法。
+**不建议**直接修改[基础Webpack配置](../webpack/index.ts), 建议在最外层的[Webpack配置文件](../webpack.config.ts)修改, 使用[Webpack Chain](https://github.com/neutrinojs/webpack-chain/tree/v6.5.1)语法。
 
 示例：
 
-```javascript
-module.exports = env => {
+```typescript
+import { Configuration } from 'webpack';
+import { createBasicConfig } from './webpack';
+
+const webpackConfigCallback = (environments: Record<string, boolean>): Configuration => {
     // use env and process.env
     const { dev, prod } = env;
     const { NODE_ENV = 'development' } = process.env;
@@ -72,6 +75,7 @@ module.exports = env => {
         .toConfig();
 };
 
+export default webpackConfigCallback;
 ```
 
 ### `React.FC` 修正

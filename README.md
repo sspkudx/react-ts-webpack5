@@ -51,12 +51,15 @@ pnpm install # For reinstallation
 
 ### Custom Configuration
 
-**Avoid** directly modifying the [basic Webpack configuration](./webpack/index.js). Instead, it's recommended to modify the [Webpack configuration file](./webpack.config.js) at the top level using the [Webpack Chain](https://github.com/neutrinojs/webpack-chain/tree/v6.5.1) syntax.
+**Avoid** directly modifying the [basic Webpack configuration](./webpack/index.ts). Instead, it's recommended to modify the [Webpack configuration file](./webpack.config.ts) at the top level using the [Webpack Chain](https://github.com/neutrinojs/webpack-chain/tree/v6.5.1) syntax.
 
 Example:
 
-```javascript
-module.exports = env => {
+```typescript
+import { Configuration } from 'webpack';
+import { createBasicConfig } from './webpack';
+
+const webpackConfigCallback = (environments: Record<string, boolean>): Configuration => {
     // Use env and process.env
     const { dev, prod } = env;
     const { NODE_ENV = 'development' } = process.env;
@@ -75,6 +78,8 @@ module.exports = env => {
         // Don't forget to end with .toConfig()
         .toConfig();
 };
+
+export default webpackConfigCallback;
 ```
 
 ### Fixing `React.FC`
