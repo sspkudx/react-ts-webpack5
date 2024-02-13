@@ -11,6 +11,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { DefinePlugin } = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 /**
  * Generate a basic config
@@ -66,8 +67,10 @@ const createBasicConfig = (options = {}) => {
             .end()
             // output
             .output.path(path.resolve(__dirname, '../dist'))
-            .filename('[name].[contenthash].bundle.js')
-            .publicPath('/')
+            .hashFunction('xxhash64')
+            .publicPath(path.resolve(__dirname, '../'))
+            .filename('js/[name].[contenthash].bundle.js')
+            .chunkFilename('js/[name].[contenthash].js')
             .end()
             // set alias
             .resolve.alias.set('@', path.resolve(__dirname, '../src'))
@@ -219,8 +222,11 @@ const createBasicConfig = (options = {}) => {
                         },
                     ])
                     .end()
-                    .plugin('cleanWebpackPlugin')
+                    .plugin('CleanWebpackPlugin')
                     .use(CleanWebpackPlugin)
+                    .end()
+                    .plugin('CssMinimizerPlugin')
+                    .use(CssMinimizerPlugin)
                     .end();
             })
     );
