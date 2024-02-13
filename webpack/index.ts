@@ -195,7 +195,6 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                                     drop_console: true,
                                     drop_debugger: true,
                                 },
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             },
                         },
                     ])
