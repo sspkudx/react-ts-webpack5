@@ -12,14 +12,29 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 
+// types
+import type { MinifyOptions } from 'terser';
+
+/** @description Self-defined options. */
 type SelfDefineOptions = Partial<{
+    /** HTML Title */
     title: string;
+    /** Language of the project */
     lang: string;
+    /** for development conf */
     isDev: boolean;
+    /** for production conf */
     isProd: boolean;
 }>;
 
-const withBasePath = (suffix = '') => pathResolve(pathResolve(__dirname, `../${suffix}`));
+/**
+ * @description Modify the relative path to the root path of the project using `path.resolve`
+ * @param suffix the relative path relative to the root path of the project
+ * @returns the real path
+ */
+const withBasePath = (suffix = '') => pathResolve(__dirname, `../${suffix}`);
+
+const { uglifyJsMinify: minify } = TerserPlugin;
 
 /**
  * Generate a basic config
@@ -27,17 +42,9 @@ const withBasePath = (suffix = '') => pathResolve(pathResolve(__dirname, `../${s
  * @returns basic webpack conf
  */
 export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
-    const {
-        /** HTML Title */
-        title = 'react-ts-webpack-starter',
-        /** HTML language */
-        lang = 'en',
-        /** for development conf */
-        isDev = true,
-        /** for production conf */
-        isProd = false,
-    } = options || {};
+    const { title = 'react-ts-webpack-starter', lang = 'en', isDev = true, isProd = false } = options || {};
 
+    // configuration of loading styles
     const configLoadStyle = compose(
         (conf: Config) =>
             loadStyles(conf, {
@@ -75,11 +82,7 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
             .hashFunction('xxhash64')
             .filename('js/[name].[contenthash].bundle.js')
             .chunkFilename('js/[name].[contenthash].js')
-            /**
-             * @feature
-             * Set output.clean to replace CleanWebpackPlugin.
-             * See: https://webpack.js.org/configuration/output/#outputclean
-             */
+            // Set output.clean to replace CleanWebpackPlugin. See: https://webpack.js.org/configuration/output/#outputclean
             .set('clean', true)
             .end()
             // set alias
@@ -133,7 +136,6 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
             ])
             .end()
             .plugin('DefinePlugin')
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .use(DefinePlugin, [
                 {
                     isDev,
@@ -183,10 +185,10 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                     .mode('production')
                     .optimization.minimize(true)
                     .minimizer('TerserPlugin')
-                    .use(TerserPlugin, [
+                    .use(TerserPlugin<MinifyOptions>, [
                         {
                             extractComments: true,
-                            minify: TerserPlugin.uglifyJsMinify,
+                            minify,
                             terserOptions: {
                                 ecma: 5,
                                 compress: {
@@ -194,7 +196,7 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                                     drop_debugger: true,
                                 },
                                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            } as any,
+                            },
                         },
                     ])
                     .end()
