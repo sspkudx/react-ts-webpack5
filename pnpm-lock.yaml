@@ -130,6 +130,9 @@ devDependencies:
   stylelint-prettier:
     specifier: ^5.0.0
     version: 5.0.0(prettier@3.2.5)(stylelint@16.2.1)
+  terser:
+    specifier: ^5.27.0
+    version: 5.27.0
   terser-webpack-plugin:
     specifier: ^5.3.10
     version: 5.3.10(uglify-js@3.17.4)(webpack@5.90.1)
