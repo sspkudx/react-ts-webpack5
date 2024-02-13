@@ -1,10 +1,24 @@
 import Config from 'webpack-chain';
+import { loader as miniLoader } from 'mini-css-extract-plugin';
 
 interface OtherConf {
     isDev: boolean;
     styleType: 'sass' | 'scss' | 'less' | 'stylus' | 'css';
     styleResourcePatterns?: string[];
 }
+
+/**
+ * @description Generate a function used by 'auto'
+ * @param suffix style suffix without dot
+ * @returns a function used by 'auto'
+ */
+const genAutoFunc = (suffix = 'scss') => {
+    function cb(rp: string) {
+        return rp.endsWith(`.${suffix}`);
+    }
+
+    return cb;
+};
 
 /**
  * @description config style loads
@@ -16,7 +30,6 @@ export const loadStyles = (
     confInstance: Config,
     { isDev = true, styleType = 'css', styleResourcePatterns = [] }: OtherConf
 ): Config => {
-    const { loader: miniLoader } = require('mini-css-extract-plugin');
     const sourceMap = !isDev;
 
     if (styleType === 'sass') {
@@ -35,7 +48,7 @@ export const loadStyles = (
                 importLoaders: 2,
                 // css-module hash
                 modules: {
-                    auto: (resourcePath: string) => resourcePath.endsWith('.sass'),
+                    auto: genAutoFunc('sass'),
                     localIdentName: '[local]__[hash:base64]',
                 },
             })
@@ -113,7 +126,7 @@ export const loadStyles = (
                 importLoaders: 2,
                 // css-module hash
                 modules: {
-                    auto: (resourcePath: string) => resourcePath.endsWith('.scss'),
+                    auto: genAutoFunc('scss'),
                     localIdentName: '[local]__[hash:base64]',
                 },
             })
@@ -181,7 +194,7 @@ export const loadStyles = (
                 importLoaders: 2,
                 // css-module hash
                 modules: {
-                    auto: (resourcePath: string) => resourcePath.endsWith('.less'),
+                    auto: genAutoFunc('less'),
                     localIdentName: '[local]__[hash:base64]',
                 },
             })
@@ -249,7 +262,7 @@ export const loadStyles = (
                 importLoaders: 2,
                 // css-module hash
                 modules: {
-                    auto: (resourcePath: string) => resourcePath.endsWith('.styl') || resourcePath.endsWith('.stylus'),
+                    auto: genAutoFunc('styl') || genAutoFunc('stylus'),
                     localIdentName: '[local]__[hash:base64]',
                 },
             })
@@ -316,7 +329,7 @@ export const loadStyles = (
             importLoaders: 1,
             // css-module hash
             modules: {
-                auto: (resourcePath: string) => resourcePath.endsWith('.css'),
+                auto: genAutoFunc('css'),
                 localIdentName: '[local]__[hash:base64]',
             },
         })
