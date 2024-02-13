@@ -172,7 +172,7 @@ const createBasicConfig = (options = {}) => {
                     .devtool('eval')
                     .mode('production')
                     .optimization.minimize(true)
-                    .minimizer('terser')
+                    .minimizer('TerserPlugin')
                     .use(TerserPlugin, [
                         {
                             extractComments: true,
@@ -186,6 +186,9 @@ const createBasicConfig = (options = {}) => {
                             },
                         },
                     ])
+                    .end()
+                    .minimizer('CssMinimizerPlugin')
+                    .use(CssMinimizerPlugin)
                     .end()
                     .splitChunks({
                         cacheGroups: {
@@ -224,9 +227,6 @@ const createBasicConfig = (options = {}) => {
                     .end()
                     .plugin('CleanWebpackPlugin')
                     .use(CleanWebpackPlugin)
-                    .end()
-                    .plugin('CssMinimizerPlugin')
-                    .use(CssMinimizerPlugin)
                     .end();
             })
     );
