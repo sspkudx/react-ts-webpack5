@@ -14,11 +14,21 @@ interface OtherConf {
  */
 const genAutoFunc = (suffix = 'scss') => {
     function cb(rp: string) {
+        if (suffix === 'styl' || suffix === 'stylus') {
+            return rp.endsWith('.styl') || rp.endsWith('.stylus');
+        }
+
         return rp.endsWith(`.${suffix}`);
     }
 
     return cb;
 };
+
+const genCssModulesOption = (suffix = 'scss') => ({
+    auto: genAutoFunc(suffix),
+    localIdentName: '[local]__[hash:base64]',
+    exportLocalsConvention: 'camelCase',
+});
 
 /**
  * @description config style loads
@@ -47,10 +57,7 @@ export const loadStyles = (
                 sourceMap,
                 importLoaders: 2,
                 // css-module hash
-                modules: {
-                    auto: genAutoFunc('sass'),
-                    localIdentName: '[local]__[hash:base64]',
-                },
+                modules: genCssModulesOption('sass'),
             })
             .end()
             .use('postcss')
@@ -125,10 +132,7 @@ export const loadStyles = (
                 sourceMap,
                 importLoaders: 2,
                 // css-module hash
-                modules: {
-                    auto: genAutoFunc('scss'),
-                    localIdentName: '[local]__[hash:base64]',
-                },
+                modules: genCssModulesOption(),
             })
             .end()
             .use('postcss')
@@ -193,10 +197,7 @@ export const loadStyles = (
                 sourceMap,
                 importLoaders: 2,
                 // css-module hash
-                modules: {
-                    auto: genAutoFunc('less'),
-                    localIdentName: '[local]__[hash:base64]',
-                },
+                modules: genCssModulesOption('less'),
             })
             .end()
             .use('postcss')
@@ -261,10 +262,7 @@ export const loadStyles = (
                 sourceMap,
                 importLoaders: 2,
                 // css-module hash
-                modules: {
-                    auto: genAutoFunc('styl') || genAutoFunc('stylus'),
-                    localIdentName: '[local]__[hash:base64]',
-                },
+                modules: genCssModulesOption('styl'),
             })
             .end()
             .use('postcss')
@@ -328,10 +326,7 @@ export const loadStyles = (
             sourceMap,
             importLoaders: 1,
             // css-module hash
-            modules: {
-                auto: genAutoFunc('css'),
-                localIdentName: '[local]__[hash:base64]',
-            },
+            modules: genCssModulesOption('css'),
         })
         .end()
         .use('postcss')
