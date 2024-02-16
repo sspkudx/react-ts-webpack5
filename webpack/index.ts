@@ -1,7 +1,7 @@
 import { resolve as pathResolve } from 'path';
 import Config from 'webpack-chain';
 import compose from 'compose-function';
-import { loadStyles } from './modules/LoadStyles';
+import { loadStyles, loadJs } from './modules';
 
 // plugins
 import { DefinePlugin } from 'webpack';
@@ -27,6 +27,8 @@ type SelfDefineOptions = Partial<{
     isProd: boolean;
 }>;
 
+type ConditionalConfigurationComposeCallback = (conf: Config) => Config;
+
 /**
  * @description Modify the relative path to the root path of the project using `path.resolve`
  * @param suffix the relative path relative to the root path of the project
@@ -45,7 +47,7 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
     const { title = 'react-ts-webpack-starter', lang = 'en', isDev = true, isProd = false } = options || {};
 
     // configuration of loading styles
-    const configLoadStyle = compose(
+    const takeConditionalConfiguration: ConditionalConfigurationComposeCallback = compose(
         (conf: Config) =>
             loadStyles(conf, {
                 isDev,
@@ -66,10 +68,12 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
             loadStyles(conf, {
                 isDev,
                 styleType: 'css',
-            })
+            }),
+
+        (conf: Config) => loadJs(conf, { isProd })
     );
 
-    return configLoadStyle(
+    return takeConditionalConfiguration(
         new Config()
             // set context
             .context(withBasePath())
@@ -97,26 +101,7 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
             .add('.mjs')
             .end()
             .end()
-            .module.rule('js')
-            .test(/\.[jt]sx?$/i)
-            .use('babel')
-            .loader('babel-loader')
-            .options({ babelrc: true })
-            .end()
-            .exclude.add(/node_modules/)
-            .end()
-            .end()
-            // add pics
-            .rule('pics')
-            .test(/\.(png|svg|jpe?g|gif)$/i)
-            .set('type', 'asset/resource')
-            .parser({
-                dataUrlCondition: {
-                    maxSize: 10 * 1024,
-                },
-            })
-            .end()
-            .rule('fonts')
+            .module.rule('fonts')
             .test(/\.(woff2?|eot|[ot]tf)$/i)
             .set('type', 'asset/resource')
             .end()
