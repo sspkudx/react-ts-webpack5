@@ -1,20 +1,15 @@
 import Config from 'webpack-chain';
 import { loader as miniLoader } from 'mini-css-extract-plugin';
 
-interface OtherConf {
-    isDev: boolean;
-    styleType: 'sass' | 'scss' | 'less' | 'stylus' | 'css';
-    styleResourcePatterns?: string[];
-}
-
 /**
  * @description Generate a function used by 'auto'
  * @param suffix style suffix without dot
  * @returns a function used by 'auto'
  */
 const genAutoFunc = (suffix = 'scss') => {
+    /** @param rp resolvedPath */
     function cb(rp: string) {
-        if (suffix === 'styl' || suffix === 'stylus') {
+        if (['styl', 'stylus'].includes(suffix)) {
             return rp.endsWith('.styl') || rp.endsWith('.stylus');
         }
 
@@ -24,11 +19,89 @@ const genAutoFunc = (suffix = 'scss') => {
     return cb;
 };
 
-const genCssModulesOption = (suffix = 'scss') => ({
-    auto: genAutoFunc(suffix),
-    localIdentName: '[local]__[hash:base64]',
-    exportLocalsConvention: 'camelCase',
-});
+/**
+ * @description generate options of css loaders
+ * @param styleType style type supported
+ * @param isWithCssModule is css-module config generated
+ */
+const genCssLoaderOption = (styleType = 'scss', isWithCssModule = true) => {
+    const importLoaders = Number(styleType !== 'css') + 1;
+
+    // conf without modules
+    const basicConf = {
+        sourceMap: false,
+        importLoaders,
+        modules: false,
+    };
+
+    if (isWithCssModule) {
+        // conf with modules
+        return {
+            ...basicConf,
+            modules: {
+                auto: genAutoFunc(styleType),
+                // css-module hash
+                localIdentName: '[local]__[hash:base64]',
+                exportLocalsConvention: 'camelCase',
+            },
+        };
+    }
+
+    return basicConf;
+};
+
+/**
+ * @description Generate some config of css preprocessors
+ * @param styleType style type supported
+ */
+const genStyleConfigWithPreloader = (styleType = 'scss') => {
+    const styleTypeList = ['sass', 'scss', 'less', 'styl', 'stylus'];
+    const sourceMap = false;
+
+    if (styleTypeList.includes(styleType)) {
+        // List basic keys
+        let regex = /\.scss$/i;
+        let selfLoaderName = 'sass-loader';
+        let selfLoaderOptions = { sourceMap };
+
+        // for sass
+        if (styleType === 'sass') {
+            regex = /\.sass$/i;
+            selfLoaderOptions = Object.assign(selfLoaderOptions, {
+                sassOptions: {
+                    indentedSyntax: true,
+                },
+            });
+        }
+
+        // for less
+        if (styleType === 'less') {
+            regex = /\.less$/i;
+            selfLoaderName = 'less-loader';
+        }
+
+        // for stylus
+        if (['styl', 'stylus'].includes(styleType)) {
+            regex = /\.styl(us)?$/i;
+            selfLoaderName = 'stylus-loader';
+        }
+
+        return {
+            regex,
+            selfLoaderName,
+            selfLoaderOptions,
+        };
+    }
+
+    return null;
+};
+
+/** the second parameter's type of `loadStyles` */
+type LoadStylesOtherConf = Partial<{
+    isDev: boolean;
+    styleType: ['css', 'sass', 'scss', 'less', 'styl', 'stylus'][number];
+    styleResourcePatterns: string[];
+}>;
 
 /**
  * @description config style loads
@@ -38,89 +111,17 @@ const genCssModulesOption = (suffix = 'scss') => ({
  */
 export const loadStyles = (
     confInstance: Config,
-    { isDev = true, styleType = 'css', styleResourcePatterns = [] }: OtherConf
-): Config => {
-    const sourceMap = !isDev;
+    { isDev = true, styleType = 'css', styleResourcePatterns = [] }: LoadStylesOtherConf
+) => {
+    const sourceMap = false;
 
-    if (styleType === 'sass') {
-        return confInstance.module
-            .rule('sass')
-            .test(/\.sass$/i)
-            .oneOf('css-modules')
-            .test(/\.module\.\w+$/i)
-            .use('style')
-            .loader(isDev ? 'style-loader' : miniLoader)
-            .end()
-            .use('css')
-            .loader('css-loader')
-            .options({
-                sourceMap,
-                importLoaders: 2,
-                // css-module hash
-                modules: genCssModulesOption('sass'),
-            })
-            .end()
-            .use('postcss')
-            .loader('postcss-loader')
-            .options({ sourceMap })
-            .end()
-            .use('sass')
-            .loader('sass-loader')
-            .options({
-                sourceMap,
-                sassOptions: {
-                    indentedSyntax: true,
-                },
-            })
-            .end()
-            .use('style-resource')
-            .loader('style-resources-loader')
-            .options({
-                patterns: Array.isArray(styleResourcePatterns) ? styleResourcePatterns : [],
-            })
-            .end()
-            .end()
-            .oneOf('css-normal')
-            .use('style')
-            .loader(isDev ? 'style-loader' : miniLoader)
-            .end()
-            .use('css')
-            .loader('css-loader')
-            .options({
-                sourceMap,
-                importLoaders: 2,
-                // css-module hash
-                modules: false,
-            })
-            .end()
-            .use('postcss')
-            .loader('postcss-loader')
-            .options({ sourceMap })
-            .end()
-            .use('sass')
-            .loader('sass-loader')
-            .options({
-                sourceMap,
-                sassOptions: {
-                    indentedSyntax: true,
-                },
-            })
-            .end()
-            .use('style-resource')
-            .loader('style-resources-loader')
-            .options({
-                patterns: Array.isArray(styleResourcePatterns) ? styleResourcePatterns : [],
-            })
-            .end()
-            .end()
-            .end()
-            .end();
-    }
+    const cssPreConfs = genStyleConfigWithPreloader(styleType);
+    if (cssPreConfs) {
+        const { regex, selfLoaderName, selfLoaderOptions } = cssPreConfs;
 
-    if (styleType === 'scss') {
         return confInstance.module
-            .rule('scss')
-            .test(/\.scss$/i)
+            .rule(styleType)
+            .test(regex)
             .oneOf('css-module')
             .test(/\.module\.\w+$/i)
             .use('style')
@@ -128,20 +129,15 @@ export const loadStyles = (
             .end()
             .use('css')
             .loader('css-loader')
-            .options({
-                sourceMap,
-                importLoaders: 2,
-                // css-module hash
-                modules: genCssModulesOption(),
-            })
+            .options(genCssLoaderOption(styleType))
             .end()
             .use('postcss')
             .loader('postcss-loader')
             .options({ sourceMap })
             .end()
-            .use('scss')
-            .loader('sass-loader')
-            .options({ sourceMap })
+            .use(styleType)
+            .loader(selfLoaderName)
+            .options(selfLoaderOptions)
             .end()
             .use('style-resource')
             .loader('style-resources-loader')
@@ -156,20 +152,15 @@ export const loadStyles = (
             .end()
             .use('css')
             .loader('css-loader')
-            .options({
-                sourceMap,
-                importLoaders: 2,
-                // css-module hash
-                modules: false,
-            })
+            .options(genCssLoaderOption(styleType, false))
             .end()
             .use('postcss')
             .loader('postcss-loader')
             .options({ sourceMap })
             .end()
-            .use('scss')
-            .loader('sass-loader')
-            .options({ sourceMap })
+            .use(styleType)
+            .loader(selfLoaderName)
+            .options(selfLoaderOptions)
             .end()
             .use('style-resource')
             .loader('style-resources-loader')
@@ -182,136 +173,7 @@ export const loadStyles = (
             .end();
     }
 
-    if (styleType === 'less') {
-        return confInstance.module
-            .rule('less')
-            .test(/\.less$/i)
-            .oneOf('css-modules')
-            .test(/\.module\.\w+$/i)
-            .use('style')
-            .loader(isDev ? 'style-loader' : miniLoader)
-            .end()
-            .use('css')
-            .loader('css-loader')
-            .options({
-                sourceMap,
-                importLoaders: 2,
-                // css-module hash
-                modules: genCssModulesOption('less'),
-            })
-            .end()
-            .use('postcss')
-            .loader('postcss-loader')
-            .options({ sourceMap })
-            .end()
-            .use('less')
-            .loader('less-loader')
-            .options({ sourceMap })
-            .end()
-            .use('style-resource')
-            .loader('style-resources-loader')
-            .options({
-                patterns: Array.isArray(styleResourcePatterns) ? styleResourcePatterns : [],
-            })
-            .end()
-            .end()
-            .oneOf('css-modules')
-            .use('style')
-            .loader(isDev ? 'style-loader' : miniLoader)
-            .end()
-            .use('css')
-            .loader('css-loader')
-            .options({
-                sourceMap,
-                importLoaders: 2,
-                // css-module hash
-                modules: false,
-            })
-            .end()
-            .use('postcss')
-            .loader('postcss-loader')
-            .options({ sourceMap })
-            .end()
-            .use('less')
-            .loader('less-loader')
-            .options({ sourceMap })
-            .end()
-            .use('style-resource')
-            .loader('style-resources-loader')
-            .options({
-                patterns: Array.isArray(styleResourcePatterns) ? styleResourcePatterns : [],
-            })
-            .end()
-            .end()
-            .end()
-            .end();
-    }
-
-    if (styleType === 'stylus') {
-        return confInstance.module
-            .rule('stylus')
-            .test(/\.styl(us)?$/i)
-            .oneOf('css-modules')
-            .test(/\.module\.\w+$/i)
-            .use('style')
-            .loader(isDev ? 'style-loader' : miniLoader)
-            .end()
-            .use('css')
-            .loader('css-loader')
-            .options({
-                sourceMap,
-                importLoaders: 2,
-                // css-module hash
-                modules: genCssModulesOption('styl'),
-            })
-            .end()
-            .use('postcss')
-            .loader('postcss-loader')
-            .options({ sourceMap })
-            .end()
-            .use('less')
-            .loader('stylus-loader')
-            .options({ sourceMap })
-            .end()
-            .use('style-resource')
-            .loader('style-resources-loader')
-            .options({
-                patterns: Array.isArray(styleResourcePatterns) ? styleResourcePatterns : [],
-            })
-            .end()
-            .end()
-            .oneOf('normal')
-            .use('style')
-            .loader(isDev ? 'style-loader' : miniLoader)
-            .end()
-            .use('css')
-            .loader('css-loader')
-            .options({
-                sourceMap,
-                importLoaders: 2,
-                // css-module hash
-                modules: false,
-            })
-            .end()
-            .use('postcss')
-            .loader('postcss-loader')
-            .options({ sourceMap })
-            .end()
-            .use('stylus')
-            .loader('stylus-loader')
-            .options({ sourceMap })
-            .end()
-            .use('style-resource')
-            .loader('style-resources-loader')
-            .options({
-                patterns: Array.isArray(styleResourcePatterns) ? styleResourcePatterns : [],
-            })
-            .end()
-            .end()
-            .end()
-            .end();
-    }
-
+    // for css only
     return confInstance.module
         .rule('css')
         .test(/\.css$/i)
@@ -322,12 +184,7 @@ export const loadStyles = (
         .end()
         .use('css')
         .loader('css-loader')
-        .options({
-            sourceMap,
-            importLoaders: 1,
-            // css-module hash
-            modules: genCssModulesOption('css'),
-        })
+        .options(genCssLoaderOption(styleType))
         .end()
         .use('postcss')
         .loader('postcss-loader')
@@ -346,12 +203,7 @@ export const loadStyles = (
         .end()
         .use('css')
         .loader('css-loader')
-        .options({
-            sourceMap,
-            importLoaders: 1,
-            // css-module hash
-            modules: false,
-        })
+        .options(genCssLoaderOption(styleType, false))
         .end()
         .use('postcss')
         .loader('postcss-loader')
