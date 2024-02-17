@@ -148,6 +148,10 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                 },
             ])
             .end()
+            // check ts
+            .plugin('ForkTsCheckerWebpackPlugin')
+            .use(ForkTsCheckerWebpackPlugin, [{ devServer: false }])
+            .end()
             // split chunks
             .optimization.splitChunks({
                 chunks: 'all',
@@ -167,11 +171,7 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                     .end()
                     // check ts in dev environment
                     .plugin('ForkTsCheckerWebpackPlugin')
-                    .use(ForkTsCheckerWebpackPlugin, [
-                        {
-                            devServer: true,
-                        },
-                    ])
+                    .tap(args => [...args, { devServer: true }])
                     .end()
                     .plugin('ESLintPlugin')
                     .use(ESLintPlugin, [
@@ -239,6 +239,21 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                     .use(MiniCssExtractPlugin, [
                         {
                             filename: 'style/[name]-[contenthash].css',
+                        },
+                    ])
+                    .end()
+                    // check ts in prod environment
+                    .plugin('ForkTsCheckerWebpackPlugin')
+                    .tap(args => [
+                        ...args,
+                        {
+                            devServer: false,
+                            typescript: {
+                                diagnosticOptions: {
+                                    semantic: true,
+                                    syntactic: true,
+                                },
+                            },
                         },
                     ])
                     .end();
