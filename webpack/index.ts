@@ -36,6 +36,13 @@ type ConditionalConfigurationComposeCallback = (conf: Config) => Config;
  */
 const withBasePath = (suffix = '') => pathResolve(__dirname, `../${suffix}`);
 
+/**
+ * @description get kb
+ * @param kbNum kb's num, default 1
+ * @returns kb
+ */
+const kb = (kbNum = 1) => 1024 * kbNum;
+
 const { uglifyJsMinify: minify } = TerserPlugin;
 
 /**
@@ -104,6 +111,19 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
             .module.rule('fonts')
             .test(/\.(woff2?|eot|[ot]tf)$/i)
             .set('type', 'asset/resource')
+            .end()
+            .rule('pics')
+            .test(/\.(png|jpe?g|gif)$/i)
+            .set('type', 'asset/resource')
+            .set('generator', {
+                filename: 'static/[hash][ext][query]',
+            })
+            .parser({
+                dataUrlCondition: {
+                    // 10kb
+                    maxSize: kb(10),
+                },
+            })
             .end()
             .end()
             // set plugins
