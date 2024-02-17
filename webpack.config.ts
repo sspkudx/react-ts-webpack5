@@ -1,4 +1,5 @@
 import { createBasicConfig } from './webpack';
+import { checkNodejsVersion } from './confs/CheckNodejsVersion';
 import type { Configuration } from 'webpack';
 
 /**
@@ -8,6 +9,7 @@ import type { Configuration } from 'webpack';
  * @returns a webpack config
  */
 const webpackConfigCallback = (environments: Record<string, unknown>): Configuration => {
+    checkNodejsVersion();
     // use env and process.env
     const { dev, prod } = environments;
     const { NODE_ENV = 'development' } = process.env;
