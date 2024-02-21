@@ -171,7 +171,15 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                     .end()
                     // check ts in dev environment
                     .plugin('ForkTsCheckerWebpackPlugin')
-                    .tap(args => [...args, { devServer: true }])
+                    .tap(args => {
+                        const [oldConf] = args;
+                        return [
+                            {
+                                ...oldConf,
+                                devServer: true,
+                            },
+                        ];
+                    })
                     .end()
                     .plugin('ESLintPlugin')
                     .use(ESLintPlugin, [
@@ -228,12 +236,10 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                     // html webpack plugin
                     .end()
                     .plugin('HtmlWebpackPlugin')
-                    .tap(args => [
-                        ...args,
-                        {
-                            minify: true,
-                        },
-                    ])
+                    .tap(args => {
+                        const [oldConf] = args;
+                        return [{ ...oldConf, minify: true }];
+                    })
                     .end()
                     .plugin('MiniCssExtractPlugin')
                     .use(MiniCssExtractPlugin, [
@@ -244,18 +250,21 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                     .end()
                     // check ts in prod environment
                     .plugin('ForkTsCheckerWebpackPlugin')
-                    .tap(args => [
-                        ...args,
-                        {
-                            devServer: false,
-                            typescript: {
-                                diagnosticOptions: {
-                                    semantic: true,
-                                    syntactic: true,
+                    .tap(args => {
+                        const [oldConf] = args;
+                        return [
+                            {
+                                ...oldConf,
+                                devServer: false,
+                                typescript: {
+                                    diagnosticOptions: {
+                                        semantic: true,
+                                        syntactic: true,
+                                    },
                                 },
                             },
-                        },
-                    ])
+                        ];
+                    })
                     .end();
             })
     );
