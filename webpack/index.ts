@@ -15,18 +15,6 @@ import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 // types
 import type { MinifyOptions } from 'terser';
 
-/** @description Self-defined options. */
-type SelfDefineOptions = Partial<{
-    /** HTML Title */
-    title: string;
-    /** Language of the project */
-    lang: string;
-    /** for development conf */
-    isDev: boolean;
-    /** for production conf */
-    isProd: boolean;
-}>;
-
 type ConditionalConfigurationComposeCallback = (conf: Config) => Config;
 
 /**
@@ -45,13 +33,33 @@ const kb = (kbNum = 1) => 1024 * kbNum;
 
 const { uglifyJsMinify: minify } = TerserPlugin;
 
+/** @description Self-defined options. */
+type SelfDefineOptions = Partial<{
+    /** HTML Title */
+    title: string;
+    /** Language of the project */
+    lang: string;
+    /** For development conf */
+    isDev: boolean;
+    /** For production conf */
+    isProd: boolean;
+    /** Whether open esbuild when At dev or not */
+    isEsbuildInDev: boolean;
+}>;
+
 /**
  * Generate a basic config
  * @param options config options
  * @returns basic webpack conf
  */
 export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
-    const { title = 'react-ts-webpack-starter', lang = 'en', isDev = true, isProd = false } = options || {};
+    const {
+        title = 'react-ts-webpack-starter',
+        lang = 'en',
+        isDev = true,
+        isProd = false,
+        isEsbuildInDev = true,
+    } = options || {};
 
     // configuration of loading styles
     const takeConditionalConfiguration: ConditionalConfigurationComposeCallback = compose(
@@ -77,7 +85,7 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                 styleType: 'css',
             }),
 
-        (conf: Config) => loadJs(conf, { isProd })
+        (conf: Config) => loadJs(conf, { isProd, isEsbuildInDev })
     );
 
     return takeConditionalConfiguration(
@@ -131,9 +139,7 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
             .use(HtmlWebpackPlugin, [
                 {
                     template: withBasePath('html/index.htm'),
-                    templateParameters: {
-                        lang,
-                    },
+                    templateParameters: { lang },
                     inject: 'body',
                     favicon: withBasePath('html/favicon.ico'),
                     title,
@@ -141,12 +147,7 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
             ])
             .end()
             .plugin('DefinePlugin')
-            .use(DefinePlugin, [
-                {
-                    isDev,
-                    isProd,
-                },
-            ])
+            .use(DefinePlugin, [{ isDev, isProd }])
             .end()
             // check ts
             .plugin('ForkTsCheckerWebpackPlugin')
@@ -236,17 +237,15 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                     // html webpack plugin
                     .end()
                     .plugin('HtmlWebpackPlugin')
-                    .tap(args => {
-                        const [oldConf] = args;
-                        return [{ ...oldConf, minify: true }];
-                    })
-                    .end()
-                    .plugin('MiniCssExtractPlugin')
-                    .use(MiniCssExtractPlugin, [
+                    .tap(([oldConf]) => [
                         {
-                            filename: 'style/[name]-[contenthash].css',
+                            ...oldConf,
+                            minify: true,
                         },
                     ])
+                    .end()
+                    .plugin('MiniCssExtractPlugin')
+                    .use(MiniCssExtractPlugin, [{ filename: 'style/[name]-[contenthash].css' }])
                     .end()
                     // check ts in prod environment
                     .plugin('ForkTsCheckerWebpackPlugin')
