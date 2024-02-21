@@ -77,7 +77,7 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                 styleType: 'css',
             }),
 
-        (conf: Config) => loadJs(conf, { isProd })
+        (conf: Config) => loadJs(conf, { isProd, isEsbuildInDev: true })
     );
 
     return takeConditionalConfiguration(
