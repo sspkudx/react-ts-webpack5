@@ -1,6 +1,9 @@
 import Config from 'webpack-chain';
 import { loader as miniLoader } from 'mini-css-extract-plugin';
 
+/** valid style types */
+type StyleType = ['css', 'sass', 'scss', 'less', 'styl', 'stylus'][number];
+
 /**
  * @description Generate a function used by 'auto'
  * @param suffix style suffix without dot
@@ -21,15 +24,21 @@ const genAutoFunc = (suffix = 'scss') => {
 
 /**
  * @description generate options of css loaders
- * @param styleType style type supported
- * @param isWithCssModule is css-module config generated
+ * @param opts options
  */
-const genCssLoaderOption = (styleType = 'scss', isWithCssModule = true) => {
+const genCssLoaderOption = (
+    opts: Partial<{
+        styleType: StyleType;
+        isWithCssModule: boolean;
+        sourceMap: boolean;
+    }> = {}
+) => {
+    const { styleType = 'scss', isWithCssModule = true, sourceMap = false } = opts || {};
     const importLoaders = Number(styleType !== 'css') + 1;
 
     // conf without modules
     const basicConf = {
-        sourceMap: false,
+        sourceMap,
         importLoaders,
         modules: false,
     };
@@ -54,9 +63,9 @@ const genCssLoaderOption = (styleType = 'scss', isWithCssModule = true) => {
  * @description Generate some config of css preprocessors
  * @param styleType style type supported
  */
-const genStyleConfigWithPreloader = (styleType = 'scss') => {
+const genStyleConfigWithPreloader = (opts: { styleType: StyleType; sourceMap?: boolean }) => {
+    const { styleType = 'scss', sourceMap = false } = opts || {};
     const styleTypeList = ['sass', 'scss', 'less', 'styl', 'stylus'];
-    const sourceMap = false;
 
     if (styleTypeList.includes(styleType)) {
         // List basic keys
@@ -102,13 +111,6 @@ const genStyleConfigWithPreloader = (styleType = 'scss') => {
     return null;
 };
 
-/** the second parameter's type of `loadStyles` */
-type LoadStylesOtherConf = Partial<{
-    isDev: boolean;
-    styleType: ['css', 'sass', 'scss', 'less', 'styl', 'stylus'][number];
-    styleResourcePatterns: string[];
-}>;
-
 /**
  * @description config style loads
  * @param confInstance
@@ -117,13 +119,21 @@ type LoadStylesOtherConf = Partial<{
  */
 export const loadStyles = (
     confInstance: Config,
-    { isDev = true, styleType = 'css', styleResourcePatterns = [] }: LoadStylesOtherConf
+    opts: Partial<{
+        isDev: boolean;
+        styleType: StyleType;
+        styleResourcePatterns: string[];
+        /** toggle source map option to users */
+        isOpenSourceMap: (() => boolean) | boolean;
+    }> = {}
 ) => {
-    const sourceMap = false;
-
-    const cssPreConfs = genStyleConfigWithPreloader(styleType);
-    if (cssPreConfs) {
-        const { regex, selfLoaderName, selfLoaderOptions } = cssPreConfs;
+    const { isDev = true, styleType = 'css', styleResourcePatterns = [], isOpenSourceMap } = opts || {};
+    const sourceMap = typeof isOpenSourceMap === 'function' ? isOpenSourceMap() : Boolean(isOpenSourceMap);
+    /** the basic parameter of thr function genCssLoaderOption */
+    const basicOptGenCssLoaderOption = { styleType, sourceMap };
+    const cssPreConfiguration = genStyleConfigWithPreloader({ styleType, sourceMap });
+    if (cssPreConfiguration) {
+        const { regex, selfLoaderName, selfLoaderOptions } = cssPreConfiguration;
 
         return confInstance.module
             .rule(styleType)
@@ -135,7 +145,7 @@ export const loadStyles = (
             .end()
             .use('css')
             .loader('css-loader')
-            .options(genCssLoaderOption(styleType))
+            .options(genCssLoaderOption(basicOptGenCssLoaderOption))
             .end()
             .use('postcss')
             .loader('postcss-loader')
@@ -152,13 +162,13 @@ export const loadStyles = (
             })
             .end()
             .end()
-            .oneOf('css-modules')
+            .oneOf('style-normal')
             .use('style')
             .loader(isDev ? 'style-loader' : miniLoader)
             .end()
             .use('css')
             .loader('css-loader')
-            .options(genCssLoaderOption(styleType, false))
+            .options(genCssLoaderOption({ isWithCssModule: false, ...basicOptGenCssLoaderOption }))
             .end()
             .use('postcss')
             .loader('postcss-loader')
@@ -190,7 +200,7 @@ export const loadStyles = (
         .end()
         .use('css')
         .loader('css-loader')
-        .options(genCssLoaderOption(styleType))
+        .options(genCssLoaderOption(basicOptGenCssLoaderOption))
         .end()
         .use('postcss')
         .loader('postcss-loader')
@@ -203,13 +213,13 @@ export const loadStyles = (
         })
         .end()
         .end()
-        .oneOf('css-modules')
+        .oneOf('style-normal')
         .use('style')
         .loader(isDev ? 'style-loader' : miniLoader)
         .end()
         .use('css')
         .loader('css-loader')
-        .options(genCssLoaderOption(styleType, false))
+        .options(genCssLoaderOption({ isWithCssModule: false, ...basicOptGenCssLoaderOption }))
         .end()
         .use('postcss')
         .loader('postcss-loader')

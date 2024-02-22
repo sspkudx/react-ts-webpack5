@@ -18,7 +18,7 @@ export const checkNodejsVersion = (
 
     // Check the greatest version is equal to or lower than the highest version.
     if (highestVersion && greatestVersion > highestVersion) {
-        throw new Error(`The Nodejs version should be >= ${highestVersion}`);
+        throw new Error(`The Nodejs version should be <= ${highestVersion}`);
     }
 
     // Check whether is LTS version or not.
