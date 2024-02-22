@@ -107,6 +107,8 @@ type LoadStylesOtherConf = Partial<{
     isDev: boolean;
     styleType: ['css', 'sass', 'scss', 'less', 'styl', 'stylus'][number];
     styleResourcePatterns: string[];
+    /** @description for the definition of build source map */
+    isOpenSourceMap: (() => boolean) | boolean;
 }>;
 
 /**
@@ -117,11 +119,12 @@ type LoadStylesOtherConf = Partial<{
  */
 export const loadStyles = (
     confInstance: Config,
-    { isDev = true, styleType = 'css', styleResourcePatterns = [] }: LoadStylesOtherConf
+    { isDev = true, styleType = 'css', styleResourcePatterns = [], isOpenSourceMap = false }: LoadStylesOtherConf
 ) => {
-    const sourceMap = false;
+    const sourceMap = typeof isOpenSourceMap === 'boolean' ? isOpenSourceMap : isOpenSourceMap();
 
     const cssPreConfs = genStyleConfigWithPreloader(styleType);
+
     if (cssPreConfs) {
         const { regex, selfLoaderName, selfLoaderOptions } = cssPreConfs;
 

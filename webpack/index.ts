@@ -45,6 +45,8 @@ type SelfDefineOptions = Partial<{
     isProd: boolean;
     /** Whether open esbuild when At dev or not */
     isEsbuildInDev: boolean;
+    /** Whether open source map for styles or not */
+    isOpenStyleSourceMap: (() => boolean) | boolean;
 }>;
 
 /**
@@ -59,19 +61,26 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
         isDev = true,
         isProd = false,
         isEsbuildInDev = true,
+        isOpenStyleSourceMap = false,
     } = options || {};
+
+    // basic configuration for styles
+    const basicStyleConf = {
+        isDev,
+        isOpenSourceMap: isOpenStyleSourceMap,
+    };
 
     // configuration of loading styles
     const takeConditionalConfiguration: ConditionalConfigurationComposeCallback = compose(
         (conf: Config) =>
             loadStyles(conf, {
-                isDev,
+                ...basicStyleConf,
                 styleType: 'sass',
             }),
 
         (conf: Config) =>
             loadStyles(conf, {
-                isDev,
+                ...basicStyleConf,
                 styleType: 'scss',
                 styleResourcePatterns: [
                     // use scss
@@ -81,7 +90,7 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
 
         (conf: Config) =>
             loadStyles(conf, {
-                isDev,
+                ...basicStyleConf,
                 styleType: 'css',
             }),
 
