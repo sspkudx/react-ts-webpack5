@@ -17,6 +17,8 @@ type LoadJsOptions = Partial<{
     isEsbuildInDev: boolean;
     /** your options of esbuild loader */
     esbuildLoaderOpts: EsbuildLoaderOpts;
+    /** babel only compile, which is more important than `notCompiles` */
+    onlyCompiles: (string | RegExp)[];
     /** babel not compile */
     notCompiles: (string | RegExp)[];
 }>;
@@ -32,6 +34,7 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
         isTypeScript = true,
         isEsbuildInDev = false,
         esbuildLoaderOpts = {},
+        onlyCompiles = [],
         notCompiles = [/node_modules/],
     } = opts || {};
 
@@ -49,12 +52,20 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
             .end()
             .end();
 
+        const jsRule = baseConf.rule('js');
+        // add only compiles
+        if (onlyCompiles && onlyCompiles.length) {
+            onlyCompiles.forEach(item => {
+                jsRule.include.add(item);
+            });
+        }
         // add not compiles
         if (notCompiles.length) {
-            const babelLoader = baseConf.rule('js');
-            notCompiles.forEach(item => {
-                babelLoader.exclude.add(item);
-            });
+            if (!onlyCompiles || !onlyCompiles.length) {
+                notCompiles.forEach(item => {
+                    jsRule.exclude.add(item);
+                });
+            }
         }
 
         if (isTypeScript) {
@@ -74,12 +85,21 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
                 .end()
                 .end();
 
+            const tsRule = tsConf.rule('ts');
+            // add only compiles
+            if (onlyCompiles && onlyCompiles.length) {
+                onlyCompiles.forEach(item => {
+                    tsRule.include.add(item);
+                });
+            }
+
             // add not compiles
             if (notCompiles.length) {
-                const babelLoader = tsConf.rule('ts');
-                notCompiles.forEach(item => {
-                    babelLoader.exclude.add(item);
-                });
+                if (!onlyCompiles || !onlyCompiles.length) {
+                    notCompiles.forEach(item => {
+                        tsRule.exclude.add(item);
+                    });
+                }
             }
 
             return tsConf.end();
@@ -113,12 +133,20 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
         .end()
         .end();
 
+    const jsRule = baseConf.rule('js');
+    // add only compiles
+    if (onlyCompiles && onlyCompiles.length) {
+        onlyCompiles.forEach(item => {
+            jsRule.include.add(item);
+        });
+    }
     // add not compiles
     if (notCompiles.length) {
-        const babelLoader = baseConf.rule('js');
-        notCompiles.forEach(item => {
-            babelLoader.exclude.add(item);
-        });
+        if (!onlyCompiles || !onlyCompiles.length) {
+            notCompiles.forEach(item => {
+                jsRule.exclude.add(item);
+            });
+        }
     }
 
     if (isTypeScript) {
@@ -135,12 +163,21 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
             .end()
             .end();
 
+        const tsRule = tsConf.rule('ts');
+        // add only compiles
+        if (onlyCompiles && onlyCompiles.length) {
+            onlyCompiles.forEach(item => {
+                tsRule.include.add(item);
+            });
+        }
+
         // add not compiles
         if (notCompiles.length) {
-            const babelLoader = tsConf.rule('ts');
-            notCompiles.forEach(item => {
-                babelLoader.exclude.add(item);
-            });
+            if (!onlyCompiles || !onlyCompiles.length) {
+                notCompiles.forEach(item => {
+                    tsRule.exclude.add(item);
+                });
+            }
         }
 
         return tsConf.end();
