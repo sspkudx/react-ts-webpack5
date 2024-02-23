@@ -1,5 +1,5 @@
 import Config from 'webpack-chain';
-import type { LoaderOptions as EsbuildLoaderOpts } from 'esbuild-loader';
+import type { LoaderOptions as EsbuildLoaderOptions } from 'esbuild-loader';
 
 /** @description basic config of ts-loader */
 const tsLoaderBasicConf = {
@@ -16,7 +16,7 @@ type LoadJsOptions = Partial<{
     /** is using esbuild in your dev environment */
     isEsbuildInDev: boolean;
     /** your options of esbuild loader */
-    esbuildLoaderOpts: EsbuildLoaderOpts;
+    esbuildLoaderOptions: EsbuildLoaderOptions;
     /** babel only compile, which is more important than `notCompiles` */
     onlyCompiles: (string | RegExp)[];
     /** babel not compile */
@@ -33,7 +33,7 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
         isProd,
         isTypeScript = true,
         isEsbuildInDev = false,
-        esbuildLoaderOpts = {},
+        esbuildLoaderOptions = {},
         onlyCompiles = [],
         notCompiles = [/node_modules/],
     } = opts || {};
@@ -117,7 +117,7 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
             .loader('esbuild-loader')
             .options({
                 target: 'es2020',
-                ...esbuildLoaderOpts,
+                ...esbuildLoaderOptions,
             })
             .end()
             .end()
@@ -159,7 +159,10 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
             .end()
             .use('ts-loader')
             .loader('ts-loader')
-            .options(tsLoaderBasicConf)
+            .options({
+                ...tsLoaderBasicConf,
+                happyPackMode: false,
+            })
             .end()
             .end();
 

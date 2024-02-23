@@ -15,7 +15,7 @@ import { EsbuildPlugin } from 'esbuild-loader';
 
 // types
 import type { MinifyOptions } from 'terser';
-import type { LoaderOptions as EsbuildLoaderOpts } from 'esbuild-loader';
+import type { LoaderOptions as EsbuildLoaderOptions } from 'esbuild-loader';
 
 type ConditionalConfigurationComposeCallback = (conf: Config) => Config;
 
@@ -48,7 +48,7 @@ type SelfDefineOptions = Partial<{
     /** Whether open esbuild when At dev or not */
     isEsbuildInDev: boolean;
     /** for esbuild loader options */
-    esbuildLoaderOptions: EsbuildLoaderOpts;
+    esbuildLoaderOptions: EsbuildLoaderOptions;
     /** Whether open source map for styles or not */
     isOpenStyleSourceMap: (() => boolean) | boolean;
     /** babel only compile, which is more important than `babelNotCompiles` */
@@ -109,6 +109,7 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
             loadJs(conf, {
                 isProd,
                 isEsbuildInDev,
+                esbuildLoaderOptions,
                 notCompiles: babelNotCompiles,
                 onlyCompiles: babelOnlyCompiles,
             })
