@@ -51,6 +51,8 @@ type SelfDefineOptions = Partial<{
     esbuildLoaderOptions: EsbuildLoaderOpts;
     /** Whether open source map for styles or not */
     isOpenStyleSourceMap: (() => boolean) | boolean;
+    /** babel only compile, which is more important than `babelNotCompiles` */
+    babelOnlyCompiles: (string | RegExp)[];
     /** babel not compile */
     babelNotCompiles: (string | RegExp)[];
 }>;
@@ -69,6 +71,7 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
         isEsbuildInDev = true,
         isOpenStyleSourceMap = false,
         esbuildLoaderOptions = { target: 'es2020' },
+        babelOnlyCompiles = [],
         babelNotCompiles = [/node_modules/],
     } = options || {};
 
@@ -102,7 +105,13 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                 styleType: 'css',
             }),
 
-        (conf: Config) => loadJs(conf, { isProd, isEsbuildInDev, notCompiles: babelNotCompiles })
+        (conf: Config) =>
+            loadJs(conf, {
+                isProd,
+                isEsbuildInDev,
+                notCompiles: babelNotCompiles,
+                onlyCompiles: babelOnlyCompiles,
+            })
     );
 
     return takeConditionalConfiguration(
