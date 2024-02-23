@@ -11,9 +11,11 @@ import TerserPlugin from 'terser-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import { EsbuildPlugin } from 'esbuild-loader';
 
 // types
 import type { MinifyOptions } from 'terser';
+import type { LoaderOptions as EsbuildLoaderOpts } from 'esbuild-loader';
 
 type ConditionalConfigurationComposeCallback = (conf: Config) => Config;
 
@@ -45,8 +47,12 @@ type SelfDefineOptions = Partial<{
     isProd: boolean;
     /** Whether open esbuild when At dev or not */
     isEsbuildInDev: boolean;
+    /** for esbuild loader options */
+    esbuildLoaderOptions: EsbuildLoaderOpts;
     /** Whether open source map for styles or not */
     isOpenStyleSourceMap: (() => boolean) | boolean;
+    /** babel not compile */
+    babelNotCompiles: (string | RegExp)[];
 }>;
 
 /**
@@ -62,6 +68,8 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
         isProd = false,
         isEsbuildInDev = true,
         isOpenStyleSourceMap = false,
+        esbuildLoaderOptions = { target: 'es2020' },
+        babelNotCompiles = [/node_modules/],
     } = options || {};
 
     // basic configuration for styles
@@ -94,7 +102,7 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                 styleType: 'css',
             }),
 
-        (conf: Config) => loadJs(conf, { isProd, isEsbuildInDev })
+        (conf: Config) => loadJs(conf, { isProd, isEsbuildInDev, notCompiles: babelNotCompiles })
     );
 
     return takeConditionalConfiguration(
@@ -199,7 +207,15 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                             threads: true,
                         },
                     ])
-                    .end();
+                    .end()
+                    // config esbuild
+                    .when(isEsbuildInDev, conf => {
+                        conf.optimization.minimizer('EsbuildPlugin').use(EsbuildPlugin, [
+                            {
+                                target: esbuildLoaderOptions?.target || 'es2020',
+                            },
+                        ]);
+                    });
             })
             // set in production mode
             .when(isProd, configure => {
