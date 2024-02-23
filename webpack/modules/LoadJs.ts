@@ -68,8 +68,6 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
                 .loader('babel-loader')
                 .options({ babelrc: true })
                 .end()
-                .exclude.add(/node_modules/)
-                .end()
                 .use('ts-loader')
                 .loader('ts-loader')
                 .options(tsLoaderBasicConf)
@@ -113,8 +111,6 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
         .loader('babel-loader')
         .options({ babelrc: true })
         .end()
-        .exclude.add(/node_modules/)
-        .end()
         .end();
 
     // add not compiles
@@ -132,8 +128,6 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
             .use('babel')
             .loader('babel-loader')
             .options({ babelrc: true })
-            .end()
-            .exclude.add(/node_modules/)
             .end()
             .use('ts-loader')
             .loader('ts-loader')
