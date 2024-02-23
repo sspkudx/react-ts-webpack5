@@ -17,6 +17,8 @@ type LoadJsOptions = Partial<{
     isEsbuildInDev: boolean;
     /** your options of esbuild loader */
     esbuildLoaderOpts: EsbuildLoaderOpts;
+    /** babel not compile */
+    notCompiles: (string | RegExp)[];
 }>;
 
 /**
@@ -25,7 +27,13 @@ type LoadJsOptions = Partial<{
  * @param opts other options of this function
  */
 export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config => {
-    const { isProd, isTypeScript = true, isEsbuildInDev = false, esbuildLoaderOpts = {} } = opts || {};
+    const {
+        isProd,
+        isTypeScript = true,
+        isEsbuildInDev = false,
+        esbuildLoaderOpts = {},
+        notCompiles = [/node_modules/],
+    } = opts || {};
 
     // Configuration only at production environment
     if (isProd) {
@@ -39,12 +47,18 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
             .loader('babel-loader')
             .options({ babelrc: true })
             .end()
-            .exclude.add(/node_modules/)
-            .end()
             .end();
 
+        // add not compiles
+        if (notCompiles.length) {
+            const babelLoader = baseConf.rule('js');
+            notCompiles.forEach(item => {
+                babelLoader.exclude.add(item);
+            });
+        }
+
         if (isTypeScript) {
-            return baseConf
+            const tsConf = baseConf
                 .rule('ts')
                 .test(/\.tsx?$/i)
                 .use('thread-loader')
@@ -60,8 +74,17 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
                 .loader('ts-loader')
                 .options(tsLoaderBasicConf)
                 .end()
-                .end()
                 .end();
+
+            // add not compiles
+            if (notCompiles.length) {
+                const babelLoader = tsConf.rule('ts');
+                notCompiles.forEach(item => {
+                    babelLoader.exclude.add(item);
+                });
+            }
+
+            return tsConf.end();
         }
 
         return baseConf.end();
@@ -94,8 +117,16 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
         .end()
         .end();
 
+    // add not compiles
+    if (notCompiles.length) {
+        const babelLoader = baseConf.rule('js');
+        notCompiles.forEach(item => {
+            babelLoader.exclude.add(item);
+        });
+    }
+
     if (isTypeScript) {
-        return baseConf
+        const tsConf = baseConf
             .rule('ts')
             .test(/\.tsx?$/i)
             .use('babel')
@@ -108,8 +139,17 @@ export const loadJs = (confInstance: Config, opts: LoadJsOptions = {}): Config =
             .loader('ts-loader')
             .options(tsLoaderBasicConf)
             .end()
-            .end()
             .end();
+
+        // add not compiles
+        if (notCompiles.length) {
+            const babelLoader = tsConf.rule('ts');
+            notCompiles.forEach(item => {
+                babelLoader.exclude.add(item);
+            });
+        }
+
+        return tsConf.end();
     }
 
     return baseConf.end();
