@@ -44,7 +44,7 @@ npm install
 yarn
 
 # Using pnpm
-pnpm install # For reinstallation
+pnpm install
 
 # If you want to take the latest packages, run command below instead.
 pnpm up
