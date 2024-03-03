@@ -4,15 +4,16 @@
 
 预装配置包括:
 
-* `react @^18.2.0`
-* `sass`
-* `TypeScript @^5.0.0`
+-   `react @^18.2.0`
+-   `sass`
+-   `TypeScript @^5.0.0`
 
 ## 开发前必读
 
-1. `node >= 16`, 且最好使用`LTS`版本
-2. 如需改用`yarn`, 请删除`package-lock.json`。不建议使用`yarn`2以上的版本
-3. 如需改用`pnpm`, 请删除`package-lock.json`, 并保证`node >= 16`
+1. `node >= 16`, 且最好使用`LTS`版本。
+2. 如需改用`npm`, 请删除`pnpm-lock.yaml`。
+3. 如需改用`yarn`, 请删除`pnpm-lock.yaml`。不建议使用`yarn` 2 以上的版本。
+4. 如需改用`pnpm`, 检查`node`版本, 确保`node >= 16`。
 
 ## 安装项目
 
@@ -39,8 +40,10 @@ npm i
 yarn
 
 # pnpm
-pnpm up # 首次安装
-pnpm i # 重装
+pnpm i
+
+# 如希望直接使用最新版本依赖, 直接运行下面的命令而非`pnpm i`
+pnpm up
 ```
 
 ## 开发注意事项
@@ -60,19 +63,24 @@ const webpackConfigCallback = (environments: Record<string, boolean>): Configura
     const { dev, prod } = env;
     const { NODE_ENV = 'development' } = process.env;
 
-    return createBasicConfig({
-        title: 'react-ts-webpack-starter',
-        lang: 'zh-CN',
-        isDev: Boolean(dev) && NODE_ENV === 'development',
-        isProd: Boolean(prod) && NODE_ENV === 'production',
-    })
-        // 例: 你的配置写在下方
-        .plugin('YourPlugin').use(YourPlugin, [{
-            // Plugin配置
-        }])
-        .end()
-        // 以.toConfig结尾不要忘记
-        .toConfig();
+    return (
+        createBasicConfig({
+            title: 'react-ts-webpack-starter',
+            lang: 'zh-CN',
+            isDev: Boolean(dev) && NODE_ENV === 'development',
+            isProd: Boolean(prod) && NODE_ENV === 'production',
+        })
+            // 例: 你的配置写在下方
+            .plugin('YourPlugin')
+            .use(YourPlugin, [
+                {
+                    // Plugin配置
+                },
+            ])
+            .end()
+            // 重要‼️: 以.toConfig结尾不要忘记
+            .toConfig()
+    );
 };
 
 export default webpackConfigCallback;
@@ -120,14 +128,14 @@ interface IProps {
 
 const ParentComponent: React.FC<PropsWithChildren<IProps>> = props => {
     const { value, children } = props;
-    
+
     return (
         <div>
             <p>{value}</p>
             {children}
         </div>
     );
-}
+};
 
 export default ParentComponent;
 ```
