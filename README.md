@@ -4,19 +4,20 @@ This is an ultra-lightweight template for a `React` + `webpack` project that you
 
 Pre-installed configurations include:
 
-- `react @^18.2.0`
-- `sass`
-- `TypeScript @^5.0.0`
+-   `react @^18.2.0`
+-   `sass`
+-   `TypeScript @^5.0.0`
 
 ## Translations
 
-- [中文文档](./docs/README_zh-cn.md)
+-   [中文文档](./docs/README_zh-cn.md)
 
 ## Pre-Development Considerations
 
 1. Ensure that you have `node >= 16` installed, preferably using the **LTS** version.
-2. If you prefer to use `yarn`, delete the `package-lock.json` file. Note that using `yarn` versions 2 and above is not recommended.
-3. If you prefer to use `pnpm`, delete the `package-lock.json` file and make sure your `node >= 16`.
+2. If you prefer to use `npm`, delete the `pnpm-lock.yaml` file. Note that using `yarn` versions 2 and above is not recommended.
+3. If you prefer to use `yarn`, delete the`pnpm-lock.yaml` file. Note that using `yarn` versions 2 and above is not recommended.
+4. If you prefer to use `pnpm`, make sure your `node >= 16`.
 
 ## Project Installation
 
@@ -43,8 +44,10 @@ npm install
 yarn
 
 # Using pnpm
-pnpm up # For initial installation
-pnpm install # For reinstallation
+pnpm install
+
+# If you want to take the latest packages, run command below instead.
+pnpm up
 ```
 
 ## Development Considerations
@@ -64,19 +67,24 @@ const webpackConfigCallback = (environments: Record<string, boolean>): Configura
     const { dev, prod } = env;
     const { NODE_ENV = 'development' } = process.env;
 
-    return createBasicConfig({
-        title: 'react-ts-webpack-starter',
-        lang: 'zh-CN',
-        isDev: Boolean(dev) && NODE_ENV === 'development',
-        isProd: Boolean(prod) && NODE_ENV === 'production',
-    })
-        // Example: Add your custom configuration below
-        .plugin('YourPlugin').use(YourPlugin, [{
-            // Plugin configuration
-        }])
-        .end()
-        // Don't forget to end with .toConfig()
-        .toConfig();
+    return (
+        createBasicConfig({
+            title: 'react-ts-webpack-starter',
+            lang: 'zh-CN',
+            isDev: Boolean(dev) && NODE_ENV === 'development',
+            isProd: Boolean(prod) && NODE_ENV === 'production',
+        })
+            // Example: Add your custom configuration below
+            .plugin('YourPlugin')
+            .use(YourPlugin, [
+                {
+                    // Plugin configuration
+                },
+            ])
+            .end()
+            // Don't forget to end with .toConfig()
+            .toConfig()
+    );
 };
 
 export default webpackConfigCallback;
@@ -124,14 +132,14 @@ interface IProps {
 
 const ParentComponent: React.FC<PropsWithChildren<IProps>> = props => {
     const { value, children } = props;
-    
+
     return (
         <div>
             <p>{value}</p>
             {children}
         </div>
     );
-}
+};
 
 export default ParentComponent;
 ```
