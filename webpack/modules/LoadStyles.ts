@@ -63,15 +63,15 @@ const genCssLoaderOption = (
  * @description Generate some config of css preprocessors
  * @param styleType style type supported
  */
-const genStyleConfigWithPreloader = (opts: { styleType: StyleType; sourceMap?: boolean }) => {
-    const { styleType = 'scss', sourceMap = false } = opts || {};
+const genStyleConfigWithPreloader = (opts: { styleType?: StyleType; sourceMap?: boolean } = {}) => {
+    const { styleType = 'scss', sourceMap = false } = opts;
     const styleTypeList = ['sass', 'scss', 'less', 'styl', 'stylus'];
 
     if (styleTypeList.includes(styleType)) {
         // List basic keys
         let regex = /\.scss$/i;
         let selfLoaderName = 'sass-loader';
-        let selfLoaderOptions = { sourceMap };
+        let selfLoaderOptions = { sourceMap: styleType === 'scss' ? true : sourceMap };
 
         // for sass
         if (styleType === 'sass') {
@@ -132,8 +132,68 @@ export const loadStyles = (
     /** the basic parameter of thr function genCssLoaderOption */
     const basicOptGenCssLoaderOption = { styleType, sourceMap };
     const cssPreConfiguration = genStyleConfigWithPreloader({ styleType, sourceMap });
+
     if (cssPreConfiguration) {
         const { regex, selfLoaderName, selfLoaderOptions } = cssPreConfiguration;
+
+        if (styleType === 'scss') {
+            // add 'resolve-url-loader' to fix `url()` in scss
+            return confInstance.module
+                .rule(styleType)
+                .test(regex)
+                .oneOf('css-module')
+                .test(/\.module\.\w+$/i)
+                .use('style')
+                .loader(isDev ? 'style-loader' : miniLoader)
+                .end()
+                .use('css')
+                .loader('css-loader')
+                .options(genCssLoaderOption(basicOptGenCssLoaderOption))
+                .end()
+                .use('postcss')
+                .loader('postcss-loader')
+                .options({ sourceMap })
+                .end()
+                .use('resolve-url-loader')
+                .loader('resolve-url-loader')
+                .end()
+                .use(styleType)
+                .loader(selfLoaderName)
+                .options(selfLoaderOptions)
+                .end()
+                .use('style-resource')
+                .loader('style-resources-loader')
+                .options({
+                    patterns: Array.isArray(styleResourcePatterns) ? styleResourcePatterns : [],
+                })
+                .end()
+                .end()
+                .oneOf('style-normal')
+                .use('style')
+                .loader(isDev ? 'style-loader' : miniLoader)
+                .end()
+                .use('css')
+                .loader('css-loader')
+                .options(genCssLoaderOption({ isWithCssModule: false, ...basicOptGenCssLoaderOption }))
+                .end()
+                .use('postcss')
+                .loader('postcss-loader')
+                .options({ sourceMap })
+                .end()
+                .use(styleType)
+                .loader(selfLoaderName)
+                .options(selfLoaderOptions)
+                .end()
+                .use('style-resource')
+                .loader('style-resources-loader')
+                .options({
+                    patterns: Array.isArray(styleResourcePatterns) ? styleResourcePatterns : [],
+                })
+                .end()
+                .end()
+                .end()
+                .end();
+        }
 
         return confInstance.module
             .rule(styleType)
