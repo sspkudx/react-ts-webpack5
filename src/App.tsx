@@ -1,7 +1,7 @@
 import { RFC } from '@/types/fixed-types';
 import styles from './_style.module.scss';
 
-// fix: 完全使用箭头函数
+// fix: Using arron-functional component only.
 const App: RFC = () => {
     return <div className={styles.testerApp}>Hello World with EsBuild</div>;
 };
