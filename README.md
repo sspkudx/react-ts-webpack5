@@ -4,7 +4,7 @@ This is an ultra-lightweight template for a `React` + `webpack` project that you
 
 Pre-installed configurations include:
 
--   `react @^18.2.0`
+-   `react @^18.3.0`
 -   `sass`
 -   `TypeScript @^5.0.0`
 
