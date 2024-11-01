@@ -196,6 +196,11 @@ export const createBasicConfig = (options: SelfDefineOptions = {}): Config => {
                     .port(9222)
                     .hot(true)
                     .open(false)
+                    .set('overlay', {
+                        errors: true,
+                        warnings: false,
+                        runtimeErrors: true,
+                    })
                     .end()
                     // check ts in dev environment
                     .plugin('ForkTsCheckerWebpackPlugin')
