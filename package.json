@@ -14,7 +14,6 @@
     "@babel/preset-react": "^7.26.3",
     "@babel/preset-typescript": "^7.26.0",
     "@types/compose-function": "^0.0.33",
-    "@types/lodash": "^4.17.15",
     "@types/node": "^22.13.1",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
@@ -66,7 +65,6 @@
   "dependencies": {
     "compose-function": "^3.0.3",
     "core-js": "^3.40.0",
-    "lodash": "^4.17.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
