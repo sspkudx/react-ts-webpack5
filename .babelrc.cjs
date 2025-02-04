@@ -1,6 +1,5 @@
-const { version } = require('core-js/package.json');
+const { version: corejs } = require('core-js/package.json');
 
-const corejs = version.split('.').slice(0, -1).join('.');
 module.exports = {
     presets: [
         [
