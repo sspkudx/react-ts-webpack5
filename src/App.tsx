@@ -1,9 +1,16 @@
-import { RFC } from '@/types/fixed-types';
-import styles from './_style.module.scss';
+import { PureComponent, type ErrorInfo } from 'react';
+import style from './_style.module.scss';
 
-// fix: Using arron-functional component only.
-const App: RFC = () => {
-    return <div className={styles.testerApp}>Hello World with EsBuild</div>;
-};
+// eslint-disable-next-line react/require-optimization
+class App extends PureComponent {
+    componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+        console.log(error);
+        console.log(errorInfo);
+    }
+
+    render() {
+        return <p className={style.testerApp}>Hello</p>;
+    }
+}
 
 export default App;
