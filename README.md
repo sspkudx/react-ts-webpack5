@@ -14,7 +14,7 @@ Pre-installed configurations include:
 
 ## Pre-Development Considerations
 
-1. Ensure that you have `node >= 20` installed, preferably using the **LTS** version.
+1. Ensure that you have `node >= 18` installed, preferably using the **LTS** version.
 2. If you prefer to use `npm`, delete the `pnpm-lock.yaml` file. Note that using `yarn` versions 2 and above is not recommended.
 3. If you prefer to use `yarn`, delete the`pnpm-lock.yaml` file. Note that using `yarn` versions 2 and above is not recommended.
 
@@ -31,19 +31,6 @@ yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIR
 
 # pnpm
 pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
-```
-
-If you want to use the template for Node.js version `= 18`, you can run:
-
-```sh
-# npx
-npx degit https://github.com/sspkudx/react-ts-webpack5.git#v18 YOUR_PROJECT_DIRECTORY
-
-# yarn
-yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git#v18 YOUR_PROJECT_DIRECTORY
-
-# pnpm
-pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git#v18 YOUR_PROJECT_DIRECTORY
 ```
 
 ### Install Dependencies

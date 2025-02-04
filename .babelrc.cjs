@@ -1,10 +1,13 @@
+const { version } = require('core-js/package.json');
+
+const corejs = version.split('.').slice(0, -1).join('.');
 module.exports = {
     presets: [
         [
             '@babel/preset-env',
             {
                 useBuiltIns: 'usage',
-                corejs: '3.36',
+                corejs,
             },
         ],
         [
