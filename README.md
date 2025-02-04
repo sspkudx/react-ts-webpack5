@@ -4,34 +4,33 @@ This is an ultra-lightweight template for a `React` + `webpack` project that you
 
 Pre-installed configurations include:
 
--   `react @^18.3.0`
--   `sass`
--   `TypeScript @^5.0.0`
+- `react @^18.3.0`
+- `sass`
+- `TypeScript @^5.0.0`
 
 ## Translations
 
--   [中文文档](./docs/README_zh-cn.md)
+- [中文文档](./docs/README_zh-cn.md)
 
 ## Pre-Development Considerations
 
-1. Ensure that you have `node >= 16` installed, preferably using the **LTS** version.
+1. Ensure that you have `node >= 20` installed, preferably using the **LTS** version.
 2. If you prefer to use `npm`, delete the `pnpm-lock.yaml` file. Note that using `yarn` versions 2 and above is not recommended.
 3. If you prefer to use `yarn`, delete the`pnpm-lock.yaml` file. Note that using `yarn` versions 2 and above is not recommended.
-4. If you prefer to use `pnpm`, make sure your `node >= 16`.
 
 ## Project Installation
 
 ### Clone the Project Template
 
 ```sh
-# Using npx
-npx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
+# npx
+npx degit https://github.com/sspkudx/react-ts-webpack5.git#beta YOUR_PROJECT_DIRECTORY
 
-# Using yarn
-yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
+# yarn
+yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git#beta YOUR_PROJECT_DIRECTORY
 
-# Using pnpm
-pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
+# pnpm
+pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git#beta YOUR_PROJECT_DIRECTORY
 ```
 
 ### Install Dependencies
