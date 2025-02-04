@@ -4,16 +4,15 @@
 
 预装配置包括:
 
--   `react @^18.3.0`
--   `sass`
--   `TypeScript @^5.0.0`
+- `react @^18.3.0`
+- `sass`
+- `TypeScript @^5.0.0`
 
 ## 开发前必读
 
-1. `node >= 16`, 且最好使用`LTS`版本。
+1. `node >= 20`, 且最好使用`LTS`版本。
 2. 如需改用`npm`, 请删除`pnpm-lock.yaml`。
 3. 如需改用`yarn`, 请删除`pnpm-lock.yaml`。不建议使用`yarn` 2 以上的版本。
-4. 如需改用`pnpm`, 检查`node`版本, 确保`node >= 16`。
 
 ## 安装项目
 
@@ -21,13 +20,13 @@
 
 ```sh
 # npx
-npx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
+npx degit https://github.com/sspkudx/react-ts-webpack5.git#beta YOUR_PROJECT_DIRECTORY
 
 # yarn
-yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
+yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git#beta YOUR_PROJECT_DIRECTORY
 
 # pnpm
-pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
+pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git#beta YOUR_PROJECT_DIRECTORY
 ```
 
 ### 安装依赖

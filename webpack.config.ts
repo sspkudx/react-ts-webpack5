@@ -9,7 +9,7 @@ import type { Configuration } from 'webpack';
  * @returns a webpack config
  */
 const webpackConfigCallback = (environments: Record<string, unknown>): Configuration => {
-    checkNodejsVersion();
+    checkNodejsVersion({ lowestVersion: 20 });
     // use env and process.env
     const { dev, prod } = environments;
     const { NODE_ENV = 'development' } = process.env;
