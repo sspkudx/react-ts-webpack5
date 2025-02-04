@@ -29,6 +29,19 @@ yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git#beta YOUR_PROJEC
 pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git#beta YOUR_PROJECT_DIRECTORY
 ```
 
+如果您想使用适用于Node.js`= 18`的模板，可以运行以下命令：
+
+```sh
+# npx
+npx degit https://github.com/sspkudx/react-ts-webpack5.git#v18 YOUR_PROJECT_DIRECTORY
+
+# yarn
+yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git#v18 YOUR_PROJECT_DIRECTORY
+
+# pnpm
+pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git#v18 YOUR_PROJECT_DIRECTORY
+```
+
 ### 安装依赖
 
 ```sh

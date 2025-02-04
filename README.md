@@ -24,13 +24,26 @@ Pre-installed configurations include:
 
 ```sh
 # npx
-npx degit https://github.com/sspkudx/react-ts-webpack5.git#beta YOUR_PROJECT_DIRECTORY
+npx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
 
 # yarn
-yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git#beta YOUR_PROJECT_DIRECTORY
+yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
 
 # pnpm
-pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git#beta YOUR_PROJECT_DIRECTORY
+pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
+```
+
+If you want to use the template for Node.js version `= 18`, you can run:
+
+```sh
+# npx
+npx degit https://github.com/sspkudx/react-ts-webpack5.git#v18 YOUR_PROJECT_DIRECTORY
+
+# yarn
+yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git#v18 YOUR_PROJECT_DIRECTORY
+
+# pnpm
+pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git#v18 YOUR_PROJECT_DIRECTORY
 ```
 
 ### Install Dependencies
