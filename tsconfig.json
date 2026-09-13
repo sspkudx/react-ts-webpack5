@@ -8,18 +8,15 @@
         "strict": true,
         "forceConsistentCasingInFileNames": true,
         "module": "esnext",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
-        "baseUrl": "./",
-        "plugins": [
-            { "name": "typescript-plugin-css-modules" }
-        ],
         "paths": {
-            "@/*": ["src/*"]
+            "@/*": ["./src/*"]
         },
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        "types": ["vite/client"]
     },
     "include": ["src"],
     "exclude": ["node_modules", "**/*.test.ts", "**/*.test.tsx"]

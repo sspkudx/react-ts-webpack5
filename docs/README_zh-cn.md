@@ -1,16 +1,18 @@
 # 开发文档
 
-这是一个极简的`React` + `webpack`项目模板，可开箱即用。
+这是一个极简的`React` + `Vite`项目模板，可开箱即用。
 
 预装配置包括:
 
-- `react @^18.3.0`
+- `react @^19.3.0`
 - `sass`
-- `TypeScript @^5.0.0`
+- `TypeScript @^7.0.0`
+- `vite @^8.0.0`
+- `eslint`(flat config) + `prettier` + `stylelint`
 
 ## 开发前必读
 
-1. `node >= 20`, 且最好使用`LTS`版本。
+1. `node >= 22`, 推荐使用`fnm`配合`.nvmrc`管理版本。
 2. 如需改用`npm`, 请删除`pnpm-lock.yaml`。
 3. 如需改用`yarn`, 请删除`pnpm-lock.yaml`。不建议使用`yarn` 2 以上的版本。
 
@@ -60,47 +62,36 @@ pnpm up
 
 ## 开发注意事项
 
+### 常用命令
+
+```sh
+# 启动开发服务器 (http://localhost:9222)
+pnpm dev
+
+# 生产构建 (输出到 ./dist)
+pnpm build
+
+# 预览生产构建产物
+pnpm preview
+
+# 格式化与 lint (eslint + stylelint 自动修复)
+pnpm formatter
+```
+
 ### 自定义配置
 
-**不建议**直接修改[基础Webpack配置](../webpack/index.ts), 建议在最外层的[Webpack配置文件](../webpack.config.ts)修改, 使用[Webpack Chain](https://github.com/neutrinojs/webpack-chain/tree/v6.5.1)语法。
+直接修改最外层的 [Vite 配置文件](../vite.config.ts) 即可，已内置：
 
-示例：
-
-```typescript
-import { Configuration } from 'webpack';
-import { createBasicConfig } from './webpack';
-
-const webpackConfigCallback = (environments: Record<string, boolean>): Configuration => {
-    // use env and process.env
-    const { dev, prod } = env;
-    const { NODE_ENV = 'development' } = process.env;
-
-    return (
-        createBasicConfig({
-            title: 'react-ts-webpack-starter',
-            lang: 'zh-CN',
-            isDev: Boolean(dev) && NODE_ENV === 'development',
-            isProd: Boolean(prod) && NODE_ENV === 'production',
-        })
-            // 例: 你的配置写在下方
-            .plugin('YourPlugin')
-            .use(YourPlugin, [
-                {
-                    // Plugin配置
-                },
-            ])
-            .end()
-            // 重要‼️: 以.toConfig结尾不要忘记
-            .toConfig()
-    );
-};
-
-export default webpackConfigCallback;
-```
+- `@` 别名指向 `./src`
+- CSS Modules(`.module.scss`), `camelCase` 导出
+- 从 `./src/assets/scss/_globals.scss` 自动注入全局 scss 变量
+- `isDev` / `isProd` 全局变量
+- 开发服务器端口 `9222`
+- 生产构建分包(`chunk-vendors`)与移除 console/debugger
 
 ### `React.FC` 修正
 
-`React 18`的`React.FC`类型重写，导致无法解构`children`。因此有两种方法可以解决这一问题。
+`React 18+`的`React.FC`类型重写，导致无法解构`children`。因此有两种方法可以解决这一问题。
 
 #### 方法一：需要`children`时手动引入`PropsWithChildren`类型
 

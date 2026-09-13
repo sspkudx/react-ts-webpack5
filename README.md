@@ -1,12 +1,14 @@
 # Development Documentation
 
-This is an ultra-lightweight template for a `React` + `webpack` project that you can use out of the box.
+This is an ultra-lightweight template for a `React` + `Vite` project that you can use out of the box.
 
 Pre-installed configurations include:
 
-- `react @^18.3.0`
+- `react @^19.3.0`
 - `sass`
-- `TypeScript @^5.0.0`
+- `TypeScript @^7.0.0`
+- `vite @^8.0.0`
+- `eslint` (flat config) + `prettier` + `stylelint`
 
 ## Translations
 
@@ -14,9 +16,8 @@ Pre-installed configurations include:
 
 ## Pre-Development Considerations
 
-1. Ensure that you have `node >= 18` installed, preferably using the **LTS** version.
+1. Ensure that you have `node >= 22` installed (managed via `fnm` with the `.nvmrc` file).
 2. If you prefer to use `npm`, delete the `pnpm-lock.yaml` file. Note that using `yarn` versions 2 and above is not recommended.
-3. If you prefer to use `yarn`, delete the`pnpm-lock.yaml` file. Note that using `yarn` versions 2 and above is not recommended.
 
 ## Project Installation
 
@@ -44,58 +45,40 @@ yarn
 
 # Using pnpm
 pnpm install
-
-# If you want to take the latest packages, run command below instead.
-pnpm up
 ```
 
-## Development Considerations
+## Development
 
-### Custom Configuration
+```sh
+# Start the dev server (http://localhost:9222)
+pnpm dev
 
-**Avoid** directly modifying the [basic Webpack configuration](./webpack/index.ts). Instead, it's recommended to modify the [Webpack configuration file](./webpack.config.ts) at the top level using the [Webpack Chain](https://github.com/neutrinojs/webpack-chain/tree/v6.5.1) syntax.
+# Build for production (output to ./dist)
+pnpm build
 
-Example:
+# Preview the production build
+pnpm preview
 
-```typescript
-import { Configuration } from 'webpack';
-import { createBasicConfig } from './webpack';
-
-const webpackConfigCallback = (environments: Record<string, boolean>): Configuration => {
-    // Use env and process.env
-    const { dev, prod } = env;
-    const { NODE_ENV = 'development' } = process.env;
-
-    return (
-        createBasicConfig({
-            title: 'react-ts-webpack-starter',
-            lang: 'zh-CN',
-            isDev: Boolean(dev) && NODE_ENV === 'development',
-            isProd: Boolean(prod) && NODE_ENV === 'production',
-        })
-            // Example: Add your custom configuration below
-            .plugin('YourPlugin')
-            .use(YourPlugin, [
-                {
-                    // Plugin configuration
-                },
-            ])
-            .end()
-            // Don't forget to end with .toConfig()
-            .toConfig()
-    );
-};
-
-export default webpackConfigCallback;
+# Format & lint (eslint + stylelint with --fix)
+pnpm formatter
 ```
 
-### Fixing `React.FC`
+## Custom Configuration
 
-In `React 18`, the `React.FC` type has been rewritten, causing issues with destructuring `children`. There are two ways to address this:
+Edit the [Vite configuration](./vite.config.ts) at the top level. It covers:
+
+- `@` alias pointing to `./src`
+- CSS modules (`.module.scss`) with `camelCase` exports
+- Global scss variables injected from `./src/assets/scss/_globals.scss`
+- `isDev` / `isProd` globals
+- Dev server on port `9222`
+- Production chunk splitting (`chunk-vendors`) and console/debugger stripping
+
+## Fixing `React.FC`
+
+In `React 18+`, the `React.FC` type has been rewritten, causing issues with destructuring `children`. There are two ways to address this:
 
 #### Method 1: Manually Import `PropsWithChildren` Type When Needed
-
-Although the official recommendation is for developers to define components using the `function` keyword, many developers still prefer using `React.FC`. However, even when using `React.FC` to represent components, you still need to manually import the `PropsWithChildren` type in `React 18`.
 
 The official recommendation is to define components like this when they have `children`:
 

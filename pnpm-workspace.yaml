@@ -1,0 +1,18 @@
+packages:
+    - 'apps/*'
+    - 'packages/*'
+    # 开发启动器控制台前端（Vue 3 + Vite，产物由 scripts/dev-launcher/server.mjs 托管）
+    - 'scripts/dev-launcher/web'
+
+# pnpm 11+ 配置统一迁移至本文件（.npmrc 仅保留 registry/auth）
+shamefullyHoist: true
+engineStrict: true
+
+# pnpm 11 默认不执行依赖的构建脚本；core-js（legacy 产物 polyfill）、
+# unrs-resolver（eslint 原生解析器）、esbuild（平台二进制）与
+# @parcel/watcher（文件监听原生模块）为必要依赖，显式放行。
+allowBuilds:
+    core-js: true
+    unrs-resolver: true
+    esbuild: true
+    '@parcel/watcher': true

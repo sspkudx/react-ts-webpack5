@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Migrated on September 13th, 2026 (UTC + 8)
+
+- Migrated from `webpack` to `vite @^8.0.0`.
+- Upgraded `react` to `@^19.3.0`, `typescript` to `@^7.0.0`, `eslint` to `@^10.10.0`.
+- Removed the whole webpack stack (`webpack`, `webpack-cli`, `webpack-chain`, `babel-loader`, `css-loader`, `ts-loader`, `fork-ts-checker-webpack-plugin`, ...) and babel presets.
+- Added `vite.config.ts`, root `index.html` and `public/` dir; deleted `webpack/`, `confs/`, `html/`, `.babelrc.cjs`.
+- Migrated ESLint to flat config (`eslint.config.js`).
+
 ## Upgraded on April 6th, 2023 (UTC + 8)
 
 - Upgraded the webpack version from 4 to 5.
