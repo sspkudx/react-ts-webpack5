@@ -1,46 +1,53 @@
 {
-  "name": "react-ts-vite",
-  "version": "0.0.1",
-  "description": "Really basic React Vite build with TS",
-  "scripts": {
-    "dev": "vite",
-    "start": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "formatter": "eslint ./src --fix && stylelint 'src/**/*{css,scss}' --fix"
-  },
-  "license": "MIT",
-  "type": "module",
-  "devDependencies": {
-    "@eslint/js": "^9.39.5",
-    "@types/node": "^22.20.2",
-    "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
-    "@vitejs/plugin-react": "^5.2.0",
-    "autoprefixer": "^10.5.6",
-    "eslint": "^9.39.4",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.6",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "globals": "^17.12.0",
-    "postcss": "^8.5.28",
-    "postcss-preset-env": "^11.5.2",
-    "prettier": "^3.9.6",
-    "sass": "^1.104.0",
-    "stylelint": "^17.15.0",
-    "stylelint-config-standard": "^40.0.0",
-    "stylelint-config-standard-scss": "^17.0.0",
-    "stylelint-prettier": "^5.0.3",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.70.0",
-    "vite": "^8.3.0"
-  },
-  "dependencies": {
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
-  },
-  "engines": {
-    "node": ">= 22"
-  }
+    "name": "react-scafflod",
+    "version": "0.1.0",
+    "private": true,
+    "description": "React + Vite + TS monorepo scaffold（pnpm workspace：apps/* + packages/*）",
+    "type": "module",
+    "scripts": {
+        "dev:example": "pnpm -F example-app dev",
+        "start": "pnpm dev",
+        "build": "pnpm -r run build",
+        "build:app": "pnpm -F example-app build",
+        "build:packages": "pnpm -r --filter \"./packages/**\" run build",
+        "preview": "pnpm -F example-app preview",
+        "typecheck": "pnpm -F example-app typecheck",
+        "lint": "eslint \"apps/**/src/**/*.{js,jsx,ts,tsx}\" \"packages/**/src/**/*.{js,jsx,ts,tsx}\"",
+        "lint:fix": "eslint \"apps/**/src/**/*.{js,jsx,ts,tsx}\" \"packages/**/src/**/*.{js,jsx,ts,tsx}\" --fix",
+        "lint:style": "stylelint \"apps/**/src/**/*.{css,scss}\" \"packages/**/src/**/*.{css,scss}\"",
+        "lint:style:fix": "stylelint \"apps/**/src/**/*.{css,scss}\" \"packages/**/src/**/*.{css,scss}\" --fix",
+        "format": "prettier --write \"apps/**/src/**/*.{js,jsx,ts,tsx,css,scss}\" \"packages/**/src/**/*.{js,jsx,ts,tsx,css,scss}\" \"*.{js,jsx,mjs,ts,tsx,json,yml,yaml}\"",
+        "format:check": "prettier --check \"apps/**/src/**/*.{js,jsx,ts,tsx,css,scss}\" \"packages/**/src/**/*.{js,jsx,ts,tsx,css,scss}\" \"*.{js,jsx,mjs,ts,tsx,json,yml,yaml}\"",
+        "formatter": "pnpm lint:fix && pnpm lint:style:fix"
+    },
+    "license": "MIT",
+    "devDependencies": {
+        "@eslint/js": "^9.39.5",
+        "@types/node": "^22.20.2",
+        "@types/react": "^19.3.0",
+        "@types/react-dom": "^19.3.0",
+        "@vitejs/plugin-react": "catalog:",
+        "autoprefixer": "^10.5.6",
+        "eslint": "^9.39.4",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.6",
+        "eslint-plugin-react": "^7.37.5",
+        "eslint-plugin-react-hooks": "^7.1.1",
+        "globals": "^17.12.0",
+        "postcss": "^8.5.28",
+        "postcss-preset-env": "^11.5.2",
+        "prettier": "^3.9.6",
+        "sass": "^1.104.0",
+        "stylelint": "^17.15.0",
+        "stylelint-config-standard": "^40.0.0",
+        "stylelint-config-standard-scss": "^17.0.0",
+        "stylelint-prettier": "^5.0.3",
+        "typescript": "catalog:",
+        "typescript-eslint": "^8.70.0",
+        "vite": "catalog:"
+    },
+    "engines": {
+        "node": ">= 22",
+        "pnpm": ">= 11"
+    }
 }

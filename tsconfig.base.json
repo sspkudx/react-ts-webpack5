@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        // bundler：支持 package.json exports 解析（Vite 8+ 仅提供 exports，无顶层 main/types）
+        "moduleResolution": "bundler",
+        // 解析链单一事实来源：让 TS 在 workspace 包的 exports 中命中 development 条件（指向 src），
+        // 类型层与 Vite dev 运行时走同一套解析（源码直读，无需先构建 dist），
+        // 无需在各项目 tsconfig 里硬编码 @react-app/* 的 paths
+        "customConditions": ["development"],
+        "strict": true,
+        "jsx": "react-jsx",
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "allowJs": true,
+        "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true,
+        "sourceMap": true,
+        "lib": ["esnext", "dom", "dom.iterable"]
+    }
+}

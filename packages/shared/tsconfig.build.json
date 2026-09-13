@@ -1,0 +1,18 @@
+{
+    "extends": "./tsconfig.json", // 继续继承仓库顶层约束
+    "compilerOptions": {
+        "declaration": true, // 关键：输出 .d.ts
+        "emitDeclarationOnly": true, // 只发类型，不生成 js
+        "rootDir": "./src", // TS 6.0 起 rootDir 不再自动推断，需显式指定以保持 dist 扁平结构
+        "outDir": "dist", // 与 vite lib 构建共用 dist 目录，vite 先清空再 tsc 生成声明
+        "skipLibCheck": true, // 避免三方包类型错误阻塞构建
+        "isolatedModules": false // 与 emitDeclarationOnly 共存
+    },
+    "include": ["src/**/*.ts", "src/**/*.tsx", "types/*.d.ts"],
+    "exclude": [
+        "node_modules",
+        "**/*.test.ts",
+        "**/*.spec.ts",
+        "vite.config.ts" // 构建脚本不要
+    ]
+}

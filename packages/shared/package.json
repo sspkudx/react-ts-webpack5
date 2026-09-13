@@ -1,0 +1,29 @@
+{
+    "name": "@react-app/shared",
+    "version": "1.0.0",
+    "description": "react-scafflod 共享工具库：类型守卫与数字工具",
+    "type": "module",
+    "main": "dist/index.js",
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "development": {
+                "types": "./src/index.ts",
+                "default": "./src/index.ts"
+            },
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "sideEffects": false,
+    "scripts": {
+        "build": "vite build && tsc -p tsconfig.build.json"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT"
+}

@@ -1,0 +1,14 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "noEmit": true,
+        "types": ["vite/client", "node"],
+        // @react-app/* 无需 paths：tsconfig.base.json 的 customConditions: ["development"]
+        // 让 TS 命中包 exports 的 development 条件（src），与 Vite dev 同源解析
+        "paths": {
+            "@/*": ["./src/*"]
+        }
+    },
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts", "vite.config.ts"],
+    "exclude": ["node_modules"]
+}

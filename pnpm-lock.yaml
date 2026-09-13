@@ -4,16 +4,27 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@vitejs/plugin-react':
+      specifier: ^5.2.0
+      version: 5.2.0
+    react:
+      specifier: ^19.3.0
+      version: 19.3.0
+    react-dom:
+      specifier: ^19.3.0
+      version: 19.3.0
+    typescript:
+      specifier: ^6.0.3
+      version: 6.0.3
+    vite:
+      specifier: ^8.3.0
+      version: 8.3.0
+
 importers:
 
   .:
-    dependencies:
-      react:
-        specifier: ^19.3.0
-        version: 19.3.0
-      react-dom:
-        specifier: ^19.3.0
-        version: 19.3.0(react@19.3.0)
     devDependencies:
       '@eslint/js':
         specifier: ^9.39.5
@@ -28,7 +39,7 @@ importers:
         specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.0)
       '@vitejs/plugin-react':
-        specifier: ^5.2.0
+        specifier: 'catalog:'
         version: 5.2.0(supports-color@8.1.1)(vite@8.3.0(@types/node@22.20.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass@1.104.0)(stylus@0.62.0(supports-color@8.1.1))(terser@5.51.2))
       autoprefixer:
         specifier: ^10.5.6
@@ -76,14 +87,28 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3(prettier@3.9.6)(stylelint@17.15.0(supports-color@8.1.1)(typescript@6.0.3))
       typescript:
-        specifier: ^6.0.3
+        specifier: 'catalog:'
         version: 6.0.3
       typescript-eslint:
         specifier: ^8.70.0
         version: 8.70.0(eslint@9.39.5(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3)
       vite:
-        specifier: ^8.3.0
+        specifier: 'catalog:'
         version: 8.3.0(@types/node@22.20.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass@1.104.0)(stylus@0.62.0(supports-color@8.1.1))(terser@5.51.2)
+
+  apps/example-app:
+    dependencies:
+      '@react-app/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      react:
+        specifier: 'catalog:'
+        version: 19.3.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.3.0(react@19.3.0)
+
+  packages/shared: {}
 
 packages:
 

@@ -1,71 +1,102 @@
 # Development Documentation
 
-This is an ultra-lightweight template for a `React` + `Vite` project that you can use out of the box.
+An ultra-lightweight `React` + `Vite` + `TypeScript` monorepo scaffold (pnpm workspace), ready to use out of the box.
 
 Pre-installed configurations include:
 
 - `react @^19.3.0`
 - `sass`
-- `TypeScript @^7.0.0`
-- `vite @^8.0.0`
+- `TypeScript @^6.0.3`
+- `vite @^8.3.0`
 - `eslint` (flat config) + `prettier` + `stylelint`
 
 ## Translations
 
 - [中文文档](./docs/README_zh-cn.md)
 
-## Pre-Development Considerations
+## Project Structure
 
-1. Ensure that you have `node >= 22` installed (managed via `fnm` with the `.nvmrc` file).
-2. If you prefer to use `npm`, delete the `pnpm-lock.yaml` file. Note that using `yarn` versions 2 and above is not recommended.
+```
+├── apps/
+│   └── example-app/        # Example app (Vite + React 19 + TS, dev port 9222)
+├── packages/
+│   └── shared/             # @react-app/shared — shared utility library
+├── tsconfig.base.json      # Shared TS config (customConditions: ["development"])
+├── pnpm-workspace.yaml     # Workspace declaration + catalog versions + supply-chain policy
+└── package.json            # Root orchestrator (private; scripts delegate via pnpm -F / -r)
+```
+
+See [apps/README.md](./apps/README.md) and [packages/README.md](./packages/README.md) for the conventions of each directory.
+
+## Requirements
+
+1. `node >= 22` (managed via `fnm` with the `.nvmrc` file).
+2. `pnpm >= 11` — **required**. This monorepo relies on the `workspace:*` protocol, catalogs and `allowBuilds`, none of which work with `npm`; `yarn` is not supported either.
 
 ## Project Installation
 
 ### Clone the Project Template
 
 ```sh
-# npx
-npx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
-
-# yarn
-yarn dlx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
-
-# pnpm
-pnpm dlx degit https://github.com/sspkudx/react-ts-webpack5.git YOUR_PROJECT_DIRECTORY
+pnpm dlx degit https://github.com/Allen-Bayern/react-scafflod.git YOUR_PROJECT_DIRECTORY
 ```
 
 ### Install Dependencies
 
 ```sh
-# Using npm
-npm install
-
-# Using yarn
-yarn
-
-# Using pnpm
 pnpm install
 ```
 
 ## Development
 
+All commands run from the repository root:
+
 ```sh
 # Start the dev server (http://localhost:9222)
 pnpm dev
 
-# Build for production (output to ./dist)
+# Build for production (topological order: packages first, then apps;
+# app output goes to apps/example-app/dist)
 pnpm build
+
+# Build only the app / only the packages
+pnpm build:app
+pnpm build:packages
 
 # Preview the production build
 pnpm preview
 
-# Format & lint (eslint + stylelint with --fix)
+# Type-check the app (no build of packages required)
+pnpm typecheck
+
+# Lint / auto-fix
+pnpm lint
+pnpm lint:fix
+
+# Lint styles / auto-fix
+pnpm lint:style
+pnpm lint:style:fix
+
+# Format check / write
+pnpm format:check
+pnpm format
+
+# Lint + stylelint with --fix (legacy combo alias)
 pnpm formatter
 ```
 
+## How Workspace Linking Works
+
+`packages/*` expose an `exports` `development` condition pointing at their source:
+
+- **Development**: Vite dev resolves the `development` condition → reads `packages/shared/src` directly with hot reload. The TS type layer hits the same condition via `customConditions: ["development"]` in `tsconfig.base.json`, so `typecheck` works without building packages first. Apps need **no** alias or tsconfig `paths` for `@react-app/*`.
+- **Production**: builds resolve `types` → `dist` declarations and `import` → `dist` artifacts. `pnpm -r run build` guarantees topological order (packages before apps).
+
+Dependency versions are centralized in the `catalog` of `pnpm-workspace.yaml`; apps and packages reference them with `"react": "catalog:"`.
+
 ## Custom Configuration
 
-Edit the [Vite configuration](./vite.config.ts) at the top level. It covers:
+Edit the app's [Vite configuration](./apps/example-app/vite.config.ts). It covers:
 
 - `@` alias pointing to `./src`
 - CSS modules (`.module.scss`) with `camelCase` exports
@@ -128,7 +159,7 @@ export default ParentComponent;
 
 #### Method 2 (Recommended): Use the Encapsulated `ReactParentComponent` Type (or `RFC`)
 
-This method is essentially a wrapper around Method 1, so you can use it directly.
+This method is essentially a wrapper around Method 1, so you can use it directly. It lives in [`apps/example-app/src/types/fixed-types.ts`](./apps/example-app/src/types/fixed-types.ts).
 
 Example:
 

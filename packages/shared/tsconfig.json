@@ -1,0 +1,9 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        // TS 6.0 起 types 默认为 []，node 类型需显式声明
+        "types": ["node"]
+    },
+    "include": ["src/**/*.ts", "src/**/*.tsx", "types/*.d.ts", "vite.config.ts"],
+    "exclude": ["node_modules"]
+}

@@ -1,4 +1,5 @@
 import { PureComponent, type ErrorInfo } from 'react';
+import { formatNumber } from '@react-app/shared';
 import style from './_style.module.scss';
 
 class App extends PureComponent {
@@ -8,7 +9,9 @@ class App extends PureComponent {
     }
 
     render() {
-        return <p className={style.testerApp}>Hello</p>;
+        // 演示 workspace 联调：dev 下经 exports development 条件直读 shared 源码（热更新）
+        const message = `Hello ${formatNumber(123.456, 1)}`;
+        return <p className={style.testerApp}>{message}</p>;
     }
 }
 
